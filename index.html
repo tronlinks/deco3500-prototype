@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <title>Grapevine Beta</title>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta content='' name='description' />
+    <meta content='' name='author' />
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/custom.css"/>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script type="text/javascript" src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+	
+	
+	
+	
+  </head>
+  <body>
+  <!-- navbar-->
+    <div class='navbar navbar-default navbar-static-top'>
+      <div class='container-fluid' id="header">
+        <div class="navbar-header">
+		  <img src="images/Grapevine-Mockups.png" height="50px"/>
+        </div>
+		<div class="col-xs-2" id="search" >
+			<div class="right-inner-addon">
+				<i class="icon-search"></i>
+				<input type="search"
+					   class="form-control" 
+					   placeholder="Search" />
+			</div>
+		</div>	
+		<div class="pull-right" style="margin-top:8px">
+
+          <div class="btn-group">
+           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> JohnSmith <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#" data-toggle="modal" data-target="#manageUserSettingsModal"><span class="glyphicon glyphicon-calendar"></span> Manage Users</a></li>
+              <li><a href="#" data-toggle="modal" data-target="#userSettingsModal"><span class="glyphicon glyphicon-user"></span> User Settings</a></li>
+              <li><a href="#" data-toggle="modal" data-target="#databaseSettingsModal"><span class="glyphicon glyphicon-tasks"></span> Database Settings</a></li>
+              <li class="divider"></li>
+              <li><a href="index.html"><span class="glyphicon glyphicon-log-out"></span> Log Out</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+	<!--nav end-->
+	<!--main-->
+    <div class='container-fluid'>
+      <div class='row'>
+		<!--map-->
+        <div class='col-md-8'>
+			<div class="dropdown">
+			  <!--filter dropdown list-->
+			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				All Categories
+				<span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+				<li role="presentation" class="divider"></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+			  </ul>
+			</div>	
+			<!--end filter dropdown list-->
+				<br />
+		  <!--map div-->
+          <div id='map_canvas'></div>
+        </div>
+		<!--map end-->
+		<!--issues-->
+        <div class='col-md-4' id="content">
+		<div id="subcontent"  >
+          <div class='well' onclick="location.href='poster_view.html';">
+            <h2>
+			Israeli Palestine Conflict
+            </h2>
+			<a href="index.html"><span class="glyphicon glyphicon-time"></span>	Since 29th Aug 2014</a><br/>
+			<a href="index.html"><span class="glyphicon glyphicon-globe"></span> West Bank and Gaza, Israel</a><br/>
+			<a href="index.html"><span class="glyphicon glyphicon-send"></span> 318 Posts</a><br/><br/>
+			<p>For the fifth day in a row, conflict between Syrian Kurds and ISIL fighters have been audible and visible from the Turkish/Syrian border. Authorities in Turkish border towns have also reported streams of incoming Syrian Kurds moving across the border, seeking refuge from the intense fighting that seems to be taking a serious toll on the Kurdish....</p>
+          </div>
+		  
+		  <div class='well' onclick="location.href='poster_view.html';">
+            <h2>
+			BHP Oil Spill
+            </h2>
+			<a href="index.html"><span class="glyphicon glyphicon-time"></span>	Since 20 Sept 2014 6:26pm</a><br/>
+			<a href="index.html"><span class="glyphicon glyphicon-globe"></span> Australian Coast, Indian Ocean</a><br/>
+			<a href="index.html"><span class="glyphicon glyphicon-send"></span> 318 Posts</a><br/><br/>
+			<p>For the fifth day in a row, conflict between Syrian Kurds and ISIL fighters have been audible and visible from the Turkish/Syrian border. Authorities in Turkish border towns have also reported streams of incoming Syrian Kurds moving across the border, seeking refuge from the intense fighting that seems to be taking a serious toll on the Kurdish....</p>
+          </div>
+		  
+		  <div class='well' onclick="location.href='poster_view.html';">
+            <h2>
+			Central China Landslides
+            </h2>
+			<a href="index.html"><span class="glyphicon glyphicon-time"></span>	Since 23rd Sept 2014</a><br/>
+			<a href="index.html"><span class="glyphicon glyphicon-globe"></span> Gyongjo Priovince, China</a><br/>
+			<a href="index.html"><span class="glyphicon glyphicon-send"></span> 318 Posts</a><br/><br/>
+			<p>For the fifth day in a row, conflict between Syrian Kurds and ISIL fighters have been audible and visible from the Turkish/Syrian border. Authorities in Turkish border towns have also reported streams of incoming Syrian Kurds moving across the border, seeking refuge from the intense fighting that seems to be taking a serious toll on the Kurdish....</p>
+          </div>
+		  
+		  <div class='well' onclick="location.href='poster_view.html';">
+            <h2>
+			Hong Kong Protests
+            </h2>
+			<a href="index.html"><span class="glyphicon glyphicon-time"></span>	Since 28th Aug 2014</a><br/>
+			<a href="index.html"><span class="glyphicon glyphicon-globe"></span> Hong Kong, China</a><br/>
+			<a href="index.html"><span class="glyphicon glyphicon-send"></span> 318 Posts</a><br/><br/>
+			<p>Riot police and tear gas have failed to disperse pro-democracy protesters on the streets of Hong Kong’s busiest districts. The protests, which have been organised by local students, were intended as a peaceful event to demand voting rights for citizens. At an event I attended last night at my local university,...</p>
+          </div>
+		  
+		  <div class='well' onclick="location.href='poster_view.html';">
+            <h2>
+			Australian National Police Remembrance Day 
+            </h2>
+			<a href="index.html"><span class="glyphicon glyphicon-time"></span>	Since 29th Aug 2014</a><br/>
+			<a href="index.html"><span class="glyphicon glyphicon-globe"></span> West Bank and Gaza, Israel</a><br/>
+			<a href="index.html"><span class="glyphicon glyphicon-send"></span> 318 Posts</a><br/><br/>
+			<p>A moving tribute was held today at the Adelaide River in observance of the memory of Police officers fallen in the line of duty. Families of the eight officers honoured today were present at the ceremony, including the family of Sargeant Glen Huitson who was gunned down in the line of duty....</p>
+          </div>
+		 </div>
+		 <div class="well">
+			<a href="index.html"><span class="glyphicon glyphicon-plus"></span> 	Add new issue</a>
+		</div>
+        </div>
+		
+      </div
+	  
+	  <!-- Button trigger modal -->
+
+
+<!-- Modal -->
+		
+	  
+	  
+    </div>
+
+    <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/jquery.address.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=places&v=3.14"></script>
+    <script type="text/javascript" src="js/jquery.geocomplete.min.js"></script>
+    <script type="text/javascript" src="js/maps_lib.js"></script>
+    <script type='text/javascript'>
+      //<![CDATA[
+        $(window).resize(function () {
+          var h = $(window).height(),
+            offsetTop = 150; // Calculate the top offset
+		
+          $('#map_canvas').css('height', (h - offsetTop ));
+		  $('#content').css('height', (h - offsetTop + 18));
+		  $('#subcontent').css('height', (h - offsetTop + 12));
+        }).resize();
+        
+        $(function() {
+          MapsLib.initialize();
+          $("#search_address").geocomplete();
+
+          $(':checkbox').click(function(){
+            MapsLib.doSearch();
+          });
+
+          $(':radio').click(function(){
+            MapsLib.doSearch();
+          });
+          
+          $('#search_radius').change(function(){
+            MapsLib.doSearch();
+          });
+          
+          $('#search').click(function(){
+            MapsLib.doSearch();
+          });
+          
+          $('#find_me').click(function(){
+            MapsLib.findMe(); 
+            return false;
+          });
+          
+          $('#reset').click(function(){
+            $.address.parameter('address','');
+            MapsLib.initialize(); 
+            return false;
+          });
+          
+          $(":text").keydown(function(e){
+              var key =  e.keyCode ? e.keyCode : e.which;
+              if(key == 13) {
+                  $('#search').click();
+                  return false;
+              }
+          });
+        });
+      //]]>
+    </script>
+  </body>
+</html>
