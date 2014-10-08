@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <title>Grapevine Beta</title>
+    <meta charset='utf-8' />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/normalize.css">
+    <link rel="stylesheet" href="/css/emberui.css">
+    <link rel="stylesheet" href="/css/default-theme.css">
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/custom.css"/>
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script type="text/javascript" src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Random Jquery dependecies -->
+    <script src="/js/lib/jquery.js"></script>   
+    <script src="/js/lib/bootstrap.min.js"></script>
+    <script src="/js/lib/google.maps.js"></script>
+    <script src="/js/lib/gmaps.js"></script>
+    <script src="/js/lib/jquery.geocomplete.min.js"></script>    
+
+      <!-- Ember + Ember Data -->
+    <script src="/js/lib/handlebars-v1.3.0.js"></script>
+    <script src="/js/lib/ember.js"></script>
+    <script src="/js/lib/ember-data.js"></script>
+
+    <!-- Ember UI -->
+    <script src="/js/lib/list-view-latest.js"></script>
+    <script src="/js/lib/moment.js"></script>
+    <script src="/js/lib/jquery.velocity.min.js"></script>
+    <script src="/js/lib/emberui.js"></script>
+    
+    <!-- UserApp -->
+    <script src="/js/lib/userapp.client.js"></script>
+    <script src="/js/lib/ember-userapp.js"></script>
+
+    <!-- Firebase -->
+    <script src="/js/lib/firebase.js"></script>
+    <script src="/js/lib/emberfire.js"></script>
+
+    <!-- GeoFirebase -->
+    <script src="/js/lib/rsvp.js"></script>
+    <script src="/js/lib/geofire.js"></script>
+
+    <!-- Main JS File -->
+    <script src="/js/app.js"></script>
+
+  </head>
+  <body>
+
+
+<script type="text/x-handlebars">
+  <div class='navbar navbar-default navbar-static-top'>
+    <div class='container-fluid' id="header">
+      <div class="navbar-header">
+        <img src="images/Grapevine-Mockups.png" height="50px"/>
+      </div>
+      <div class="pull-right" style="margin-top:8px">
+          <div class="btn-group">
+           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-user"></span> 
+            {{user.current.email}} 
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <li>
+              {{#if user.authenticated}}
+                <a href="#" {{action 'logout'}}>
+                  <span class="glyphicon glyphicon-log-out"></span> 
+                  Log Out
+                </a>
+              {{/if}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{outlet}}
+</script>
+
+
+<script type="text/x-handlebars" data-template-name="index">
+  <div class='container-fluid'>
+    <div class='row'>
+      <div class='col-md-8'>
+        <div class="dropdown">
+          <!--filter dropdown list-->
+          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+            All Categories
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+          </ul>
+        </div>  <!--end filter dropdown list-->
+        <!--map div-->
+        <div id='map_canvas'></div>
+      </div>
+      <!--issues-->
+      <div class='col-md-4' id="content">
+        <div id="subcontent"  >
+          <div class='well' onclick="location.href='poster_view.html';">
+            <h2>
+              Israeli Palestine Conflict
+            </h2>
+            <a href="index.html">
+              <span class="glyphicon glyphicon-time"></span> 
+              Since 29th Aug 2014
+            </a>
+            <br/>
+            <a href="index.html">
+              <span class="glyphicon glyphicon-globe"></span> 
+              West Bank and Gaza, Israel
+            </a>
+            <br/>
+            <a href="index.html">
+              <span class="glyphicon glyphicon-send"></span> 
+              318 Posts
+            </a>
+            <br/>
+            <br/>
+            <p>For the fifth day in a row, conflict between Syrian Kurds and ISIL fighters have been audible and visible from the Turkish/Syrian border. Authorities in Turkish border towns have also reported streams of incoming Syrian Kurds moving across the border, seeking refuge from the intense fighting that seems to be taking a serious toll on the Kurdish....</p>
+          </div>
+          <div class="well">
+              <a href="index.html"><span class="glyphicon glyphicon-plus"></span>   Add new issue</a>
+          </div>
+        </div>
+      </div>        
+    </div>        
+  </div>        
+</script>
+
+
+
+  <script type="text/x-handlebars" data-template-name="login">
+    <form {{action login on='submit'}}>
+        <label for="username">Username</label>
+        {{input id='username' placeholder='Enter Username' class='form-control' value=username}}
+        <label for="password">Password</label>
+        {{input id='password' placeholder='Enter Password' class='form-control' type='password' value=password}}
+        <button type="submit" class="btn btn-default">Login</button>
+    </form>
+    {{#if error}}
+        <div class="alert alert-error">{{error.message}}</div>
+    {{/if}}
+</script>
+
+
+<script type="text/x-handlebars" data-template-name="signup">
+    <form {{action signup on='submit'}}>
+        <label for="username">Username</label>
+        {{input id='username' placeholder='Enter a Username' class='form-control' value=username}}
+        <label for="email">Email</label>
+        {{input id='email' placeholder='Enter your Email' class='form-control' value=email}}
+        <label for="password">Password</label>
+        {{input id='password' placeholder='Enter a Password' class='form-control' type='password' value=password}}
+        <button type="submit" class="btn btn-default">Sign up</button>
+    </form>
+    {{#if error}}
+        <div class="alert alert-error">{{error.message}}</div>
+    {{/if}}
+</script>
+
+
+
+
+
+		
+	  
+	  
+    </div>
+  </body>
+</html>

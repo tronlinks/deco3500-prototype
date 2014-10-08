@@ -1,0 +1,9 @@
+{
+  "firebase": "grapevinecom",
+  "public": ".",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
