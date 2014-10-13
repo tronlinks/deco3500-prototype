@@ -17,11 +17,14 @@
       <script type="text/javascript" src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <!-- Random Jquery dependecies -->
+    <!-- Random dependecies -->
     <script src="/js/lib/jquery.js"></script>   
     <script src="/js/lib/bootstrap.min.js"></script>
+
+    <!-- Maps stuff -->
     <script src="/js/lib/google.maps.js"></script>
     <script src="/js/lib/gmaps.js"></script>
+    <script src="/js/lib/locationpicker.jquery.js"></script>
     <script src="/js/lib/jquery.geocomplete.min.js"></script>    
 
       <!-- Ember + Ember Data -->
@@ -84,6 +87,22 @@
   {{outlet}}
 </script>
 
+<script type="text/x-handlebars" data-template-name="newissue">
+  {{eui-input valueBinding='title'}}
+
+  {{eui-button label='Create Issue' action='createIssue'}}
+</script>
+
+<script type="text/x-handlebars" data-template-name="newpost">
+
+  Creating Post for <b>{{issue.title}}</b> Issue
+
+  {{eui-input valueBinding='postTitle'}}
+  {{eui-input valueBinding='postContent'}}
+
+  {{eui-button label='Create Post' action='createPost'}}
+</script>
+
 
 <script type="text/x-handlebars" data-template-name="index">
   <div class='container-fluid'>
@@ -104,38 +123,88 @@
           </ul>
         </div>  <!--end filter dropdown list-->
         <!--map div-->
-        <div id='map_canvas'></div>
+        <div class="map" id="map">
+          
+          {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
+
+        </div>
       </div>
+      
       <!--issues-->
       <div class='col-md-4' id="content">
         <div id="subcontent"  >
-          <div class='well' onclick="location.href='poster_view.html';">
-            <h2>
-              Israeli Palestine Conflict
-            </h2>
-            <a href="index.html">
-              <span class="glyphicon glyphicon-time"></span> 
-              Since 29th Aug 2014
-            </a>
-            <br/>
-            <a href="index.html">
-              <span class="glyphicon glyphicon-globe"></span> 
-              West Bank and Gaza, Israel
-            </a>
-            <br/>
-            <a href="index.html">
-              <span class="glyphicon glyphicon-send"></span> 
-              318 Posts
-            </a>
-            <br/>
-            <br/>
-            <p>For the fifth day in a row, conflict between Syrian Kurds and ISIL fighters have been audible and visible from the Turkish/Syrian border. Authorities in Turkish border towns have also reported streams of incoming Syrian Kurds moving across the border, seeking refuge from the intense fighting that seems to be taking a serious toll on the Kurdish....</p>
-          </div>
+          {{#each issue in model}}
+            {{#link-to 'issue' issue.id}}
+            <div class='well'>
+              <h2>
+                {{issue.title}}
+              </h2>
+              <a href="#">
+                <span class="glyphicon glyphicon-time"></span> 
+                {{issue.created}}
+              </a>
+              <br/>
+              {{!--  
+              <a href="index.html">
+                <span class="glyphicon glyphicon-globe"></span> 
+
+              </a>
+              <br/>
+               --}}
+              <a href="#">
+                <span class="glyphicon glyphicon-send"></span> 
+                {{#if issue.post}}
+                  {{issue.post.length}}
+                {{else}}
+                  No posts yet.
+                {{/if}}
+              </a>
+              <br/>
+              <br/>
+              <p>
+                {{#if issue.content}}
+                  {{issue.content}}
+                {{else}}
+                  No content yet.
+                {{/if}}
+                
+              </p>
+            </div>
+            {{/link-to}}
+          {{/each}}
+
           <div class="well">
-              <a href="index.html"><span class="glyphicon glyphicon-plus"></span>   Add new issue</a>
+              {{#link-to 'newissue'}}
+                <span class="glyphicon glyphicon-plus"></span>
+                Add new issue
+              {{/link-to}}
           </div>
         </div>
       </div>        
+    </div>        
+  </div>        
+</script>
+
+<script type="text/x-handlebars" data-template-name="issue">
+  <div class='container-fluid'>
+    <div class='row'>
+      <div class='col-md-8'>
+        <h1>{{title}}</h1>
+        {{created}}
+        {{#if content}}
+          {{content}}
+        {{else}}
+          No content yet.
+        {{/if}}
+
+        {{#link-to 'newpost' id}}
+
+          Create a new post
+        {{/link-to}}
+
+        <!--map div-->
+        <!-- <div class="map" id="map"></div> -->
+      </div>     
     </div>        
   </div>        
 </script>
@@ -171,6 +240,13 @@
     {{/if}}
 </script>
 
+
+
+  
+  <script type="text/x-handlebars" id="components/google-maps">
+    <div class="map-canvas">
+    </div>
+  </script>
 
 
 
