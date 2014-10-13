@@ -23,6 +23,7 @@
 
     <!-- Maps stuff -->
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqoUGXPM_78IoXgBMEVwjzXq8jG3nxx64"> </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
     <script src="/js/lib/gmaps.js"></script>
     <script src="/js/lib/locationpicker.jquery.js"></script>
     <script src="/js/lib/jquery.geocomplete.min.js"></script>    
@@ -55,7 +56,6 @@
 
   </head>
   <body>
-
 
 <script type="text/x-handlebars">
   <div class='navbar navbar-default navbar-static-top'>
@@ -99,10 +99,11 @@
 
   {{eui-input valueBinding='postTitle'}}
   {{eui-input valueBinding='postContent'}}
+  {{location-picker latitude=latitude longitude=longitude radius=radius}}
 
   {{eui-button label='Create Post' action='createPost'}}
-</script>
 
+</script>
 
 <script type="text/x-handlebars" data-template-name="index">
   <div class='container-fluid'>
@@ -123,10 +124,8 @@
           </ul>
         </div>  <!--end filter dropdown list-->
         <!--map div-->
-        <div class="map" id="map">
-          
+        <div class="map" id="map">        
           {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
-
         </div>
       </div>
       
@@ -185,6 +184,11 @@
   </div>        
 </script>
 
+<script type="text/x-handlebars" data-template-name="loading">
+
+  <h1>Loading...</h1>
+</script>
+
 <script type="text/x-handlebars" data-template-name="issue">
   <div class='container-fluid'>
     <div class='row'>
@@ -198,7 +202,6 @@
         {{/if}}
 
         {{#link-to 'newpost' id}}
-
           Create a new post
         {{/link-to}}
 
@@ -209,9 +212,7 @@
   </div>        
 </script>
 
-
-
-  <script type="text/x-handlebars" data-template-name="login">
+<script type="text/x-handlebars" data-template-name="login">
     <form {{action login on='submit'}}>
         <label for="username">Username</label>
         {{input id='username' placeholder='Enter Username' class='form-control' value=username}}
@@ -223,7 +224,6 @@
         <div class="alert alert-error">{{error.message}}</div>
     {{/if}}
 </script>
-
 
 <script type="text/x-handlebars" data-template-name="signup">
     <form {{action signup on='submit'}}>
@@ -239,21 +239,21 @@
         <div class="alert alert-error">{{error.message}}</div>
     {{/if}}
 </script>
-
-
-
   
-  <script type="text/x-handlebars" id="components/google-maps">
-    <div class="map-canvas">
-    </div>
-  </script>
+<script type="text/x-handlebars" id="components/google-maps">
+  <div class="map-canvas">
+  </div>
+</script>
+
+<script type="text/x-handlebars" id="components/location-picker">
+  Location: <input type="text" id="picker-address"/>
+  Radius: <input type="text" id="picker-radius"/>
+  <div id="location-picker" style="width: 500px; height: 400px;"></div>       
+  Lat.: <input type="text" id="picker-latitude"/>
+  Long.: <input type="text" id="picker-longitude"/>
+</script>
 
 
 
-
-		
-	  
-	  
-    </div>
   </body>
 </html>

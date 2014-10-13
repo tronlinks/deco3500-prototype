@@ -35,7 +35,8 @@ App.Post = DS.Model.extend({
   // // uid: DS.attr(''),
   // // user: DS.attr(''),
   // tags: DS.attr('', {defaultValue: ''}),
-  // location: DS.attr('', {defaultValue: ''}),
+  location: DS.attr('', {defaultValue: ''}),
+  radius: DS.attr('', {defaultValue: ''}),
   // likes: DS.attr('', {defaultValue: 0}),
   // views: DS.attr('', {defaultValue: 0}),
   issue: DS.belongsTo('issue', { async: true })
@@ -109,6 +110,39 @@ App.NewissueController = Ember.Controller.extend({
 })
 
 
+App.LocationPickerComponent = Ember.Component.extend({
+  latitude: 0,
+  longitude: 0,
+  radius: 300,
+  chooseDate: function() {
+    var _this = this;
+    var container = _this.$('#location-picker');
+
+    var options = {
+      location: {
+        latitude: _this.get('latitude'),
+        longitude: _this.get('longitude')
+      },
+      radius: _this.get('radius'),
+      inputBinding: {
+        latitudeInput: _this.$('#picker-latitude'),
+        longitudeInput: _this.$('#picker-longitude'),
+        radiusInput: _this.$('#picker-radius'),
+        locationNameInput: _this.$('#picker-address')
+      },
+      enableAutocomplete: true,
+      onchanged: function(currentLocation, radius, isMarkerDropped) {
+        _this.set('latitude', currentLocation.latitude);
+        _this.set('longitude', currentLocation.longitude);
+        _this.set('radius', radius);
+        console.log("Location changed. New location (" + currentLocation.latitude + ", " + currentLocation.longitude + ")");
+      }
+    }
+
+    container.locationpicker(options);
+
+  }.on('didInsertElement')
+})
 
 App.GoogleMapsComponent = Ember.Component.extend({
   insertMap: function() {
@@ -163,18 +197,28 @@ App.NewpostRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
 App.NewpostController = Ember.Controller.extend({
     postTitle: "enter title here",
     postContent: "enter content here",
+    radius: "300",
+    latitude: "0",
+    longitude: "0",
     actions: {
       createPost: function(){
           var _this = this;
 
           this.store.find('issue', this.get('model.id')).then(function(issue){
 
-            debugger;
+            // debugger;
 
             //create new Post
             var newPost = _this.store.createRecord('post', {
                 title: _this.get('postTitle'),
-                issue: issue
+                issue: issue,
+                radius: _this.get('radius')
+
+                // TO DO
+
+                add location herere 
+
+
                 // content: _this.get('postContent'),
                 // created: moment().unix(),
                 // updated: moment().unix(),
@@ -194,7 +238,7 @@ App.NewpostController = Ember.Controller.extend({
               var modelPromise = issue.save()
 
               modelPromise.then(function(){
-                debugger;
+                // debugger;
               }, function(argument) {
                 debugger;
                 
