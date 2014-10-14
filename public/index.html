@@ -61,7 +61,7 @@
   <div class='navbar navbar-default navbar-static-top'>
     <div class='container-fluid' id="header">
       <div class="navbar-header">
-        <img src="images/Grapevine-Mockups.png" height="50px"/>
+       {{#link-to 'index'}} <img src="images/Grapevine-Mockups.png" height="50px"/> {{/link-to}}
       </div>
       <div class="pull-right" style="margin-top:8px">
           <div class="btn-group">
@@ -69,7 +69,8 @@
             <span class="glyphicon glyphicon-user"></span> 
             {{user.current.email}} 
             <span class="caret"></span>
-          </button>
+            </button>
+          <div>
           <ul class="dropdown-menu" role="menu">
             <li>
               {{#if user.authenticated}}
@@ -88,29 +89,27 @@
 </script>
 
 <script type="text/x-handlebars" data-template-name="newissue">
-  {{eui-input valueBinding='title'}}
+  {{eui-input valueBinding='issueTitle'}}
+  {{eui-input valueBinding='issueContent'}}
 
   {{eui-button label='Create Issue' action='createIssue'}}
 </script>
 
 <script type="text/x-handlebars" data-template-name="newpost">
-
-  Creating Post for <b>{{issue.title}}</b> Issue
-
+  Creating Post for <b>{{issue}}</b> Issue
   {{eui-input valueBinding='postTitle'}}
   {{eui-input valueBinding='postContent'}}
   {{location-picker latitude=latitude longitude=longitude radius=radius}}
-
   {{eui-button label='Create Post' action='createPost'}}
-
 </script>
 
 <script type="text/x-handlebars" data-template-name="index">
   <div class='container-fluid'>
     <div class='row'>
       <div class='col-md-8'>
+        <!--filter dropdown list
+        
         <div class="dropdown">
-          <!--filter dropdown list-->
           <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
             All Categories
             <span class="caret"></span>
@@ -122,26 +121,24 @@
             <li role="presentation" class="divider"></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
           </ul>
-        </div>  <!--end filter dropdown list-->
-        <!--map div-->
-        <div class="map" id="map">        
-          {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
-        </div>
+        </div>  
+
+        end filter dropdown list-->
+        
+        <!--map div-->      
+        {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
       </div>
-      
       <!--issues-->
       <div class='col-md-4' id="content">
         <div id="subcontent"  >
           {{#each issue in model}}
             {{#link-to 'issue' issue.id}}
-            <div class='well'>
+            <div class='well issue'>
               <h2>
                 {{issue.title}}
               </h2>
-              <a href="#">
-                <span class="glyphicon glyphicon-time"></span> 
-                {{issue.created}}
-              </a>
+              <span class="glyphicon glyphicon-time"></span> 
+              {{issue.created}}
               <br/>
               {{!--  
               <a href="index.html">
@@ -150,14 +147,12 @@
               </a>
               <br/>
                --}}
-              <a href="#">
-                <span class="glyphicon glyphicon-send"></span> 
-                {{#if issue.post}}
-                  {{issue.post.length}}
-                {{else}}
-                  No posts yet.
-                {{/if}}
-              </a>
+              <span class="glyphicon glyphicon-send"></span> 
+              {{#if issue.posts}}
+                {{issue.posts.length}} Posts
+              {{else}}
+                0 Posts.
+              {{/if}}
               <br/>
               <br/>
               <p>
@@ -165,14 +160,13 @@
                   {{issue.content}}
                 {{else}}
                   No content yet.
-                {{/if}}
-                
+                {{/if}}   
               </p>
             </div>
             {{/link-to}}
           {{/each}}
 
-          <div class="well">
+          <div class="well new">
               {{#link-to 'newissue'}}
                 <span class="glyphicon glyphicon-plus"></span>
                 Add new issue
@@ -185,29 +179,58 @@
 </script>
 
 <script type="text/x-handlebars" data-template-name="loading">
-
   <h1>Loading...</h1>
 </script>
 
 <script type="text/x-handlebars" data-template-name="issue">
-  <div class='container-fluid'>
+ <div class='container-fluid'>
     <div class='row'>
       <div class='col-md-8'>
         <h1>{{title}}</h1>
-        {{created}}
         {{#if content}}
           {{content}}
-        {{else}}
-          No content yet.
         {{/if}}
+        <!--map div-->   
+        {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
+      </div>
+      
+      <!--posts -->
+      <div class='col-md-4' id="content">
+        <div id="subcontent">
+         {{#each post in posts}}
+            <div class='well'>
+              <h2>
+                {{post.title}}
+              </h2>
+              <span class="glyphicon glyphicon-time"></span> 
+              {{post.created}}
+              <br/>
+              <span class="glyphicon glyphicon-globe"></span> 
+              {{post.longitude}}, {{post.latitude}}
+              <br/>
+              
+              <span class="glyphicon glyphicon-user"></span> 
+              {{#if post.user}}
+                {{post.user.email}}
+              {{else}}
+                Anonymous
+              {{/if}}
+              <br/>
+              <br/>
+              <p>
+                {{post.content}}
+              </p>
+            </div>
+          {{/each}}
 
-        {{#link-to 'newpost' id}}
-          Create a new post
-        {{/link-to}}
-
-        <!--map div-->
-        <!-- <div class="map" id="map"></div> -->
-      </div>     
+          <div class="well">
+              {{#link-to 'newpost'}}
+                <span class="glyphicon glyphicon-plus"></span>
+                Add new posts to issue 
+              {{/link-to}}
+          </div>
+        </div>
+      </div>  
     </div>        
   </div>        
 </script>
