@@ -122,9 +122,9 @@
 </script>
 
 <script type="text/x-handlebars" data-template-name="index">
-  <div class='container-fluid'>
-    <div class='row'>
-      <div class='col-md-8'>
+  <div class='container-fluid fullscreen'>
+    <div class='row fullscreen'>
+      <div class='col-md-8 fullscreen'>
         <!--filter dropdown list
         
         <div class="dropdown">
@@ -156,7 +156,10 @@
                 {{issue.title}}
               </h2>
               <span class="glyphicon glyphicon-time"></span> 
-              {{issue.created}}
+              {{issue.created}}, first spotted
+              <br/>
+              <span class="glyphicon glyphicon-pencil"></span> 
+              {{issue.created}}, last updated
               <br/>
               {{!--  
               <a href="index.html">
@@ -201,9 +204,10 @@
 </script>
 
 <script type="text/x-handlebars" data-template-name="issue">
- <div class='container-fluid'>
-    <div class='row'>
-      <div class='col-md-8'>
+ <div class='container-fluid fullscreen'>
+    
+    <div class='row fullscreen'>
+      <div class='col-md-8 fullscreen'>
         <h1>{{title}}</h1>
         {{#if content}}
           {{content}}
@@ -282,8 +286,7 @@
 </script>
   
 <script type="text/x-handlebars" id="components/google-maps">
-  <div class="map-canvas">
-  </div>
+  <div class="map-canvas"></div>
 </script>
 
 <script type="text/x-handlebars" id="components/location-picker">
@@ -293,8 +296,6 @@
   Lat.: <input type="text" id="picker-latitude"/>
   Long.: <input type="text" id="picker-longitude"/>
 </script>
-
-
 
   </body>
 </html>

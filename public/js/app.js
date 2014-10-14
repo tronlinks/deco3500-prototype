@@ -74,7 +74,7 @@ App.IndexController = Ember.Controller.extend({
     longitude: "153.0278",
   },
   markers: [
-    //code for an array of issue coordinated
+    //code for an array of issue coordinates
   ]
 });
   
@@ -88,21 +88,23 @@ App.IssueController = Ember.ObjectController.extend({
     latitude: "-27.4679",
     longitude: "153.0278",
   },
-  markers: 
+  markers: [
+    //code for an array of issue coordinates
+  ]
 
-  function() {
-    var array = []
-    // debugger;
-    this.get('model').get('posts').forEach(function(post){
-      console.log(post.get('latitude'), post.get('longitude'));
-      markerObject = Ember.Object.create({
-        latitude: post.get('latitude'),
-        longitude: post.get('longitude')});
-      array.addObject(markerObject);
-    });
+  // function() {
+  //   var array = []
+  //   // debugger;
+  //   this.get('model').get('posts').forEach(function(post){
+  //     console.log(post.get('latitude'), post.get('longitude'));
+  //     markerObject = Ember.Object.create({
+  //       latitude: post.get('latitude'),
+  //       longitude: post.get('longitude')});
+  //     array.addObject(markerObject);
+  //   });
 
-    return array
-  }.property()
+  //   return array
+  // }.property()
 
     // [
     // Ember.Object.create({ latitude: 50.08703, longitude: 14.42024 }),
@@ -184,6 +186,7 @@ App.LocationPickerComponent = Ember.Component.extend({
 });
 
 App.GoogleMapsComponent = Ember.Component.extend({
+  classNames: ['fullscreen'],
   insertMap: function() {
     var container = this.$('.map-canvas');
 
