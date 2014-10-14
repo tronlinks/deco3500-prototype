@@ -68,9 +68,15 @@ App.IndexRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
     return this.store.find('issue');
   }
 });
-// App.IndexController = Ember.Controller.extend({
-
-// });
+App.IndexController = Ember.Controller.extend({
+  selectedLocation: {
+    latitude: "-27.4679",
+    longitude: "153.0278",
+  },
+  markers: [
+    //code for an array of issue coordinated
+  ]
+});
   
 App.IssueRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
   model: function(params){

@@ -64,23 +64,41 @@
        {{#link-to 'index'}} <img src="images/Grapevine-Mockups.png" height="50px"/> {{/link-to}}
       </div>
       <div class="pull-right" style="margin-top:8px">
-          <div class="btn-group">
-           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+          <div class="dropdown">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             <span class="glyphicon glyphicon-user"></span> 
-            {{user.current.email}} 
+            {{#if user.authenticated}}
+              {{user.current.email}} 
+            {{else}}
+              Not Logged In
+            {{/if}}
             <span class="caret"></span>
             </button>
-          <div>
-          <ul class="dropdown-menu" role="menu">
-            <li>
+            <ul class="dropdown-menu" role="menu">
               {{#if user.authenticated}}
-                <a href="#" {{action 'logout'}}>
-                  <span class="glyphicon glyphicon-log-out"></span> 
-                  Log Out
-                </a>
-              {{/if}}
-            </li>
-          </ul>
+                <li>
+                  <a href="#" {{action 'logout'}}>
+                    <span class="glyphicon glyphicon-log-out"></span> 
+                    Log Out
+                  </a>
+                </li>
+              {{else}}
+                <li>
+                  {{#link-to 'login'}}
+                    <span class="glyphicon glyphicon-log-in"></span> 
+                    Login
+                  {{/link-to}}
+                </li>
+                <li>
+                  {{#link-to 'signup'}}
+                    <span class="glyphicon glyphicon-heart"></span> 
+                    Sign Up
+                  {{/link-to}}
+                </li>
+                {{/if}}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -271,7 +289,7 @@
 <script type="text/x-handlebars" id="components/location-picker">
   Location: <input type="text" id="picker-address"/>
   Radius: <input type="text" id="picker-radius"/>
-  <div id="location-picker" style="width: 500px; height: 400px;"></div>       
+  <div id="location-picker"></div>       
   Lat.: <input type="text" id="picker-latitude"/>
   Long.: <input type="text" id="picker-longitude"/>
 </script>

@@ -3,7 +3,6 @@ a:hover { color: #4B58A6; }
 
 .map-canvas {
   height: 500px;
-  width: 700px;
 }
 
 
@@ -93,4 +92,9 @@ canvas {-ms-touch-action: double-tap-zoom;}
     pointer-events: none;
 }
 
+#location-picker {
+  /*tron please make these %, not px, so scalable on mobile*/
+  width: 500px; 
+  height: 400px;
+}
 
