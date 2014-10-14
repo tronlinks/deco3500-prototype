@@ -237,11 +237,11 @@ App.NewpostController = Ember.Controller.extend({
     var geolocatePromise = navigator.geolocation.getCurrentPosition(function(position) {
       result = position.coords.latitude
       console.log(result); 
-      debugger;
     });
-    geolocatePromise.then(function() {
-      return result;
-    });
+    // geolocatePromise.then(function() {
+    //   return result;
+    // });
+return -27.4865767
   }.property(),
   longitude: function() {
     result = 0
