@@ -231,7 +231,7 @@ App.GoogleMapsComponent = Ember.Component.extend({
     }
   }.observes('markers.@each.latitude', 'markers.@each.longitude')
 });
-
+  
 App.NewpostRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
   model: function(params){
     return this.store.find('issue', params.issueID);
@@ -241,20 +241,22 @@ App.NewpostController = Ember.Controller.extend({
   postTitle: "Enter title here",
   postContent: "Enter content here",
   radius: "100",
-  latitude: function() {
-    var result = 0
-    var geolocatePromise = navigator.geolocation.getCurrentPosition(function(position) {
-      result = position.coords.latitude
-      console.log(result); 
+  latitude: "-27.4865767", //default coordinates to Brisbane
+  longitude: "153.0278",
+  latitudeSetter: function() {
+    var _this = this;
+    
+    // get geolocation
+    navigator.geolocation.getCurrentPosition(function(position) {
+    coords = position.coords
+    console.log(result); 
+    _this.set('latitude', coords.latitude);
+    _this.set('longitude', coords.longitude);
     });
-    // geolocatePromise.then(function() {
-    //   return result;
-    // });
-return -27.4865767
-  }.property(),
-  longitude: function() {
-    result = 0
-    return 153.0278}.property(),
+  }.on('init'),
+  // longitude: function() {
+  //   result = 0
+  //   return 153.0278}.property(),
   // latitude: function() {
   //   var lat;
   //   navigator.geolocation.getCurrentPosition(function(position) {
