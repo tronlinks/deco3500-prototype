@@ -19,11 +19,13 @@ html, body {
 
 #search {
 	width:200px;
+
 	margin-top:8px;
 }
 
 #subcontent {
 	overflow: scroll;
+	height:85vh
 }
 
 #mc {

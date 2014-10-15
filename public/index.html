@@ -125,8 +125,7 @@
   <div class='container-fluid fullscreen'>
     <div class='row fullscreen'>
       <div class='col-md-8 fullscreen'>
-        <!--filter dropdown list
-        
+ 	   <div class='col-md-2'>
         <div class="dropdown">
           <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
             All Categories
@@ -139,16 +138,15 @@
             <li role="presentation" class="divider"></li>
             <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
           </ul>
-        </div>  
-
-        end filter dropdown list-->
-        
-        <!--map div-->      
+        </div>  	  
+	   </div>  
+	   <div style="clear:both"></div><br />
+        <!--map div-->  
         {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
       </div>
       <!--issues-->
       <div class='col-md-4' id="content">
-        <div id="subcontent"  >
+        <div id="subcontent" >
           {{#each issue in model}}
             {{#link-to 'issue' issue.id}}
             <div class='well issue'>
@@ -183,17 +181,20 @@
                   No content yet.
                 {{/if}}   
               </p>
-            </div>
+            </div>       
             {{/link-to}}
           {{/each}}
 
-          <div class="well new">
+          
+        </div>
+		
+		<div class="well new">
               {{#link-to 'newissue'}}
                 <span class="glyphicon glyphicon-plus"></span>
                 Add new issue
               {{/link-to}}
           </div>
-        </div>
+		
       </div>        
     </div>        
   </div>        
@@ -208,7 +209,6 @@
 
 <script type="text/x-handlebars" data-template-name="issue">
  <div class='container-fluid fullscreen'>
-    
     <div class='row fullscreen'>
       <div class='col-md-8 fullscreen'>
         <h1>{{title}}</h1>
@@ -248,13 +248,14 @@
             </div>
           {{/each}}
 
-          <div class="well">
+          
+        </div>
+		<div class="well">
               {{#link-to 'newpost'}}
                 <span class="glyphicon glyphicon-plus"></span>
                 Add new posts to issue 
               {{/link-to}}
           </div>
-        </div>
       </div>  
     </div>        
   </div>        
@@ -299,6 +300,9 @@
   Lat.: <input type="text" id="picker-latitude"/>
   Long.: <input type="text" id="picker-longitude"/>
 </script>
+
+
+
 
   </body>
 </html>
