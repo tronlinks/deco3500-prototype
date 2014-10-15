@@ -107,14 +107,31 @@
 </script>
 
 <script type="text/x-handlebars" data-template-name="newissue">
-  {{eui-input valueBinding='issueTitle'}}
-  {{eui-input valueBinding='issueContent'}}
-
-  {{eui-button label='Create Issue' action='createIssue'}}
+    <div class="wrapper">
+    <form class="form-signin" >       
+      <h2 class="form-signin-heading">New Issue</h2>
+        {{eui-input valueBinding='Issue Title'}}
+<br /><br />
+        {{eui-input valueBinding='Issue Content'}}
+            
+		<br /><br />
+		{{eui-button label='Create Issue' action='createIssue'}} 
+    </form>
+  </div>
 </script>
 
 <script type="text/x-handlebars" data-template-name="newpost">
-  Creating Post for <b>{{issue}}</b> Issue
+    <div class="wrapper">
+    <form class="form-signin" >       
+      <h2 class="form-signin-heading">Creating Post for <b>{{issue}}</b> Issue</h2>
+          {{eui-input valueBinding='postTitle'}}<br />
+		  {{eui-input valueBinding='postContent'}}<br />
+		  {{location-picker latitude=latitude longitude=longitude radius=radius}}<br />
+		  {{eui-button label='Create Post' action='createPost'}}
+
+    </form>
+  </div>
+  
   {{eui-input valueBinding='postTitle'}}
   {{eui-input valueBinding='postContent'}}
   {{location-picker latitude=latitude longitude=longitude radius=radius}}
@@ -284,7 +301,7 @@
       <h2 class="form-signin-heading">Please login</h2>
 	          <label for="username">Username</label>
         {{input id='username' placeholder='Enter Username' class='form-control' value=username}}
-		        <label for="password">Password</label>
+		        <label for="password">Password</label>        <label for="password">Password</label>
         {{input id='password' placeholder='Enter Password' class='form-control' type='password' value=password}}     
 		<br />
       <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>   
