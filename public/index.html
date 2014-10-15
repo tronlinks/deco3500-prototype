@@ -125,21 +125,38 @@
   <div class='container-fluid fullscreen'>
     <div class='row fullscreen'>
       <div class='col-md-8 fullscreen'>
- 	   <div class='col-md-2'>
-        <div class="dropdown">
-          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-            All Categories
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-            <li role="presentation" class="divider"></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-          </ul>
-        </div>  	  
+ 	   <!--dropbox and search div-->
+	   <div class='col-md-8'>
+		  <div class="pull-right">
+			<div class="dropdown">
+			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				All Categories
+				<span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+				<li role="presentation" class="divider"></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+			  </ul>
+			</div> 
+		  </div>
+		  <div >
+			<form class="form-inline" role="form">
+			  <div class="form-group">
+				<div class="input-group">
+				  <div class="input-group-addon">International</div>
+				  <input class="form-control" type="email" placeholder="National">
+				</div>
+			  </div>			
+			  <div class="form-group">
+				<input type="email" class="form-control" id="exampleInputEmail2" placeholder="State">
+			  </div>
+			</form>
+		 </div>
 	   </div>  
+	   <!--div end -->
 	   <div style="clear:both"></div><br />
         <!--map div-->  
         {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
