@@ -107,14 +107,31 @@
 </script>
 
 <script type="text/x-handlebars" data-template-name="newissue">
-  {{eui-input valueBinding='issueTitle'}}
-  {{eui-input valueBinding='issueContent'}}
-
-  {{eui-button label='Create Issue' action='createIssue'}}
+    <div class="wrapper">
+    <form class="form-signin" >       
+      <h2 class="form-signin-heading">New Issue</h2>
+        {{eui-input valueBinding='Issue Title'}}
+<br /><br />
+        {{eui-input valueBinding='Issue Content'}}
+            
+		<br /><br />
+		{{eui-button label='Create Issue' action='createIssue'}} 
+    </form>
+  </div>
 </script>
 
 <script type="text/x-handlebars" data-template-name="newpost">
-  Creating Post for <b>{{issue}}</b> Issue
+    <div class="wrapper">
+    <form class="form-signin" >       
+      <h2 class="form-signin-heading">Creating Post for <b>{{issue}}</b> Issue</h2>
+          {{eui-input valueBinding='postTitle'}}<br />
+		  {{eui-input valueBinding='postContent'}}<br />
+		  {{location-picker latitude=latitude longitude=longitude radius=radius}}<br />
+		  {{eui-button label='Create Post' action='createPost'}}
+
+    </form>
+  </div>
+  
   {{eui-input valueBinding='postTitle'}}
   {{eui-input valueBinding='postContent'}}
   {{location-picker latitude=latitude longitude=longitude radius=radius}}
@@ -125,30 +142,45 @@
   <div class='container-fluid fullscreen'>
     <div class='row fullscreen'>
       <div class='col-md-8 fullscreen'>
-        <!--filter dropdown list
-        
-        <div class="dropdown">
-          <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-            All Categories
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-            <li role="presentation" class="divider"></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-          </ul>
-        </div>  
-
-        end filter dropdown list-->
-        
-        <!--map div-->      
+ 	   <!--dropbox and search div-->
+	   <div class='col-md-8'>
+		  <div class="pull-right">
+			<div class="dropdown">
+			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				All Categories
+				<span class="caret"></span>
+			  </button>
+			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
+				<li role="presentation" class="divider"></li>
+				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
+			  </ul>
+			</div> 
+		  </div>
+		  <div >
+			<form class="form-inline" role="form">
+			  <div class="form-group">
+				<div class="input-group">
+				  <div class="input-group-addon">International</div>
+				  <input class="form-control" type="email" placeholder="National">
+				</div>
+			  </div>			
+			  <div class="form-group">
+				<input type="email" class="form-control" id="exampleInputEmail2" placeholder="State">
+			  </div>
+			</form>
+		 </div>
+	   </div>  
+	   <!--div end -->
+	   <div style="clear:both"></div><br />
+        <!--map div-->  
         {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
       </div>
       <!--issues-->
       <div class='col-md-4' id="content">
-        <div id="subcontent"  >
+        <div id="subcontent" >
           {{#each issue in model}}
             {{#link-to 'issue' issue.id}}
             <div class='well issue'>
@@ -183,17 +215,20 @@
                   No content yet.
                 {{/if}}   
               </p>
-            </div>
+            </div>       
             {{/link-to}}
           {{/each}}
 
-          <div class="well new">
+          
+        </div>
+		
+		<div class="well new">
               {{#link-to 'newissue'}}
                 <span class="glyphicon glyphicon-plus"></span>
                 Add new issue
               {{/link-to}}
           </div>
-        </div>
+		
       </div>        
     </div>        
   </div>        
@@ -208,7 +243,6 @@
 
 <script type="text/x-handlebars" data-template-name="issue">
  <div class='container-fluid fullscreen'>
-    
     <div class='row fullscreen'>
       <div class='col-md-8 fullscreen'>
         <h1>{{title}}</h1>
@@ -248,44 +282,60 @@
             </div>
           {{/each}}
 
+<<<<<<< HEAD
           <div class="well">
               {{#link-to 'newpost' id}}
+=======
+          
+        </div>
+		<div class="well">
+              {{#link-to 'newpost'}}
+>>>>>>> FETCH_HEAD
                 <span class="glyphicon glyphicon-plus"></span>
                 Add new posts to issue 
               {{/link-to}}
           </div>
-        </div>
       </div>  
     </div>        
   </div>        
 </script>
 
 <script type="text/x-handlebars" data-template-name="login">
-    <form {{action login on='submit'}}>
-        <label for="username">Username</label>
+  <div class="wrapper">
+    <form class="form-signin" {{action login on='submit'}}>       
+      <h2 class="form-signin-heading">Please login</h2>
+	          <label for="username">Username</label>
         {{input id='username' placeholder='Enter Username' class='form-control' value=username}}
-        <label for="password">Password</label>
-        {{input id='password' placeholder='Enter Password' class='form-control' type='password' value=password}}
-        <button type="submit" class="btn btn-default">Login</button>
+		        <label for="password">Password</label>        <label for="password">Password</label>
+        {{input id='password' placeholder='Enter Password' class='form-control' type='password' value=password}}     
+		<br />
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>   
     </form>
-    {{#if error}}
+	{{#if error}}
         <div class="alert alert-error">{{error.message}}</div>
     {{/if}}
+  </div>
+
 </script>
 
 <script type="text/x-handlebars" data-template-name="signup">
-    <form {{action signup on='submit'}}>
+  <div class="wrapper">
+    <form class="form-signin" {{action signup on='submit'}}>       
+      <h2 class="form-signin-heading">Sign Up</h2>
         <label for="username">Username</label>
         {{input id='username' placeholder='Enter a Username' class='form-control' value=username}}
         <label for="email">Email</label>
         {{input id='email' placeholder='Enter your Email' class='form-control' value=email}}
         <label for="password">Password</label>
         {{input id='password' placeholder='Enter a Password' class='form-control' type='password' value=password}}
-        <button type="submit" class="btn btn-default">Sign up</button>
+        
+		<br />
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>   
     </form>
-    {{#if error}}
+	{{#if error}}
         <div class="alert alert-error">{{error.message}}</div>
     {{/if}}
+  </div>
 </script>
   
 <script type="text/x-handlebars" id="components/google-maps">
@@ -299,6 +349,9 @@
   Lat.: <input type="text" id="picker-latitude"/>
   Long.: <input type="text" id="picker-longitude"/>
 </script>
+
+
+
 
   </body>
 </html>
