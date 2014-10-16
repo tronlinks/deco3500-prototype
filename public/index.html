@@ -245,9 +245,9 @@
  <div class='container-fluid fullscreen'>
     <div class='row fullscreen'>
       <div class='col-md-8 fullscreen'>
-        <h1>{{title}}</h1>
-        {{#if content}}
-          {{content}}
+        <h1>{{issue.title}}</h1>
+        {{#if issue.content}}
+          {{issue.content}}
         {{/if}}
         <!--map div-->
         {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
@@ -256,7 +256,7 @@
       <!--posts -->
       <div class='col-md-4' id="content">
         <div id="subcontent">
-         {{#each post in posts}}
+         {{#each post in issue.posts}}
             <div class='well'>
               <h2>
                 {{post.title}}
@@ -284,7 +284,7 @@
 
 
           <div class="well">
-              {{#link-to 'newpost' id}}
+              {{#link-to 'newpost' issue.id}}
                 <span class="glyphicon glyphicon-plus"></span>
                 Add new posts to issue
               {{/link-to}}

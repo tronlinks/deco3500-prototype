@@ -80,37 +80,40 @@ App.IndexController = Ember.Controller.extend({
 
 App.IssueRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
   model: function(params){
-    return this.store.find('issue', params.issueID);
+      return Ember.RSVP.hash({
+        issue: this.store.find('issue', params.issueID),
+        markers: []
+      });
+  },
+  afterModel: function(m){
+
+
+
+
+    return m.issue.get('posts').then(function(a){
+      // Loop through promisessssss results
+       a.forEach(function(post){
+        markerObject = Ember.Object.create({
+          latitude: 50,//+post.get('latitude'),
+          longitude: 50//+post.get('longitude')
+        });
+        m.markers.addObject(markerObject);
+
+    //     m.markers =     [
+    // Ember.Object.create({ latitude: 50.08703, longitude: 14.42024 }),
+    // Ember.Object.create({ latitude: 50.08703, longitude: 14.42024 }),  // Prague
+    // Ember.Object.create({ latitude: 40.71356, longitude: -74.00632 }), // New York
+    // Ember.Object.create({ latitude: -33.86781, longitude: 151.20754 }) // Sydnet
+    // ];
+      });
+    })
   }
 });
 App.IssueController = Ember.ObjectController.extend({
   selectedLocation: {
     latitude: "-27.4679",
     longitude: "153.0278",
-  },
-  markers:
-  function() {
-    var array = []
-    this.get('model').get('posts').then(function(a){
-
-       a.forEach(function(post){
-        debugger;
-        console.log(post.get('latitude'), post.get('longitude'));
-        markerObject = Ember.Object.create({
-          latitude: post.get('latitude'),
-          longitude: post.get('longitude')});
-        array.addObject(markerObject);
-      });
-      return array
-    })
-
-
-
-  }.property()
-
-    // [
-
-    // ]
+  }
 });
 
 App.NewissueController = Ember.Controller.extend({
@@ -192,6 +195,10 @@ App.LocationPickerComponent = Ember.Component.extend({
 
 App.GoogleMapsComponent = Ember.Component.extend({
   classNames: ['fullscreen'],
+  longitude: '',
+  latitude: '',
+  markers: '',
+  map: '',
   insertMap: function() {
     var container = this.$('.map-canvas');
 
@@ -221,6 +228,8 @@ App.GoogleMapsComponent = Ember.Component.extend({
       markers = this.get('markers'),
       markerCache = this.get('markerCache');
 
+    debugger;
+
     if (markers){
       markerCache.forEach(function(marker) { marker.setMap(null); }); // Remove all existing markers
 
@@ -234,8 +243,10 @@ App.GoogleMapsComponent = Ember.Component.extend({
         markerCache.pushObject(gMapsMarker); // Add this marker to our cache
       }, this);
     }
-  }.observes('markers.@each.latitude', 'markers.@each.longitude')
+  }.observes('markers.@each.latitude', 'markers.@each.longitude', "markers")
 });
+
+
 
 App.NewpostRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
   model: function(params){
