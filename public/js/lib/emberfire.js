@@ -3,8 +3,705 @@
  * Ember Data. The DS.FirebaseAdapter provides all of the standard DS.Adapter
  * methods and will automatically synchronize the store with Firebase.
  *
- * EmberFire 1.2.5
+ * EmberFire 1.2.7
  * https://github.com/firebase/emberfire/
  * License: MIT
  */
-!function(){"use strict";if(void 0!==window.DS){var a=Ember.Namespace.create({VERSION:"1.2.5"});Ember.libraries&&Ember.libraries.registerCoreLibrary("EmberFire",a.VERSION);var b=Ember.RSVP.Promise,c=Ember.EnumerableUtils.map,d=Ember.EnumerableUtils.forEach,e=Ember.String.fmt;DS.FirebaseSerializer=DS.JSONSerializer.extend(Ember.Evented,{normalize:function(a,b){return a.eachRelationship(function(c,d){if("hasMany"===d.kind)if("object"!=typeof b[c]||Ember.isArray(b[c])||d.options.embedded===!0){if(Ember.isArray(b[c]))throw new Error(e('%@ relationship %@(\'%@\') must be a key/value map in Firebase. Example: { "%@": { "%@_id": true } }',[a.toString(),d.kind,d.type.typeKey,d.key,d.type.typeKey]))}else b[c]=Ember.keys(b[c])}),this._super.apply(this,arguments)},extractSingle:function(a,b,c){var d=(a.adapterFor(b),this.normalize(b,c));return b.eachRelationship(function(f,g){if(!Ember.isNone(c)&&!Ember.isNone(c[f])&&g.options.embedded===!0){var h,i,j=d[f],k=[];if("belongsTo"===g.kind){if("string"!=typeof j.id)throw new Error(e('Embedded relationship "%@" of "%@" must contain an "id" property in the payload',[g.type.typeKey,b]));k.push(j),d[f]=j.id}else{for(h in j)i=j[h],null!==i&&"object"==typeof i&&(i.id=h),k.push(i);d[f]=Ember.keys(d[f])}a.pushMany(g.type,k)}}),d},extractArray:function(a,b,d){return c(d,function(c){return this.extractSingle(a,b,c)},this)},serializeHasMany:function(a,b,c){var d=c.key,e=this.keyForRelationship?this.keyForRelationship(d,"hasMany"):d,f=DS.RelationshipChange.determineRelationshipType(a.constructor,c),g=["manyToNone","manyToMany","manyToOne"];g.indexOf(f)>-1&&(b[e]=Ember.A(a.get(d)).mapBy("id"))}}),DS.FirebaseAdapter=DS.Adapter.extend(Ember.Evented,{defaultSerializer:"-firebase",init:function(){if(!this.firebase||"object"!=typeof this.firebase)throw new Error("Please set the `firebase` property on the adapter.");this._ref=this.firebase.ref(),this._findAllMapForType={},this._recordCacheForType={},this._queue=[]},generateIdForRecord:function(){return this._ref.push().name()},_assignIdToPayload:function(a){var b=a.val();return null!==b&&"object"==typeof b&&"undefined"==typeof b.id&&(b.id=a.name()),b},find:function(a,c,d){var f=this,g=!1,h=this._getRef(c,d),i=a.serializerFor(c);return new b(function(b,j){h.on("value",function(k){var l=f._assignIdToPayload(k),m=a.getById(c,k.name());if(f._updateRecordCacheForType(c,l),g)null===l&&m&&!m.get("isDeleted")?f._enqueue(function(){a.getById(c,k.name()).deleteRecord()}):null!==l&&f._enqueue(function(){a.push(c,i.extractSingle(a,c,l))});else if(g=!0,null===l){a.hasRecordForId(c,d)&&f._enqueue(function(){a.dematerializeRecord(m)});var n=new Error(e("no record was found at %@",[h.toString()]));n.recordId=d,f._enqueue(j,[n])}else f._enqueue(b,[l])},function(a){g||f._enqueue(j,[a])})},e("DS: FirebaseAdapter#find %@ to %@",[c,h.toString()]))},findMany:function(a,b,e){var f=c(e,function(c){return this.find(a,b,c)},this);return Ember.RSVP.allSettled(f).then(function(c){return c=Ember.A(c),d(c.filterBy("state","rejected"),function(c){var d=c.reason.recordId;if(a.hasRecordForId(b,d)){var e=a.getById(b,d);a.dematerializeRecord(e)}}),Ember.A(c.filterBy("state","fulfilled")).mapBy("value")})},findAll:function(a,c){var d=this,f=this._getRef(c);return new b(function(b,e){var g;d._findAllHasEventsForType(c)||(g=d._findAllAddEventListeners(a,c,f)),f.once("value",function(a){var e=[];g&&Ember.run(null,g.resolve),null===a.val()?d._enqueue(b,[e]):(a.forEach(function(a){var b=d._assignIdToPayload(a);d._updateRecordCacheForType(c,b),e.push(b)}),d._enqueue(b,[e]))},function(a){d._enqueue(e,[a])})},e("DS: FirebaseAdapter#findAll %@ to %@",[c,f.toString()]))},_findAllMapForType:void 0,_findAllHasEventsForType:function(a){return!Ember.isNone(this._findAllMapForType[a])},_findAllAddEventListeners:function(a,b,c){this._findAllMapForType[b]=!0;var d=Ember.RSVP.defer(),e=this,f=a.serializerFor(b),g=!1;return d.promise.then(function(){g=!0}),c.on("child_added",function(c){g&&e._handleChildValue(a,b,f,c)}),c.on("child_changed",function(c){g&&e._handleChildValue(a,b,f,c)}),c.on("child_removed",function(c){if(g){var d=a.getById(b,c.name());d&&!d.get("isDeleted")&&e._enqueue(function(){a.deleteRecord(d)})}}),d},_handleChildValue:function(a,b,c,d){var e=this._assignIdToPayload(d);this._enqueue(function(){a.push(b,c.extractSingle(a,b,e))})},createRecord:function(a,b,c){return this.updateRecord(a,b,c)},updateRecord:function(a,c,d){var f=this,g=this._getRef(c,d.id),h=Ember.get(f._recordCacheForType,e("%@.%@",[c.typeKey,d.get("id")]))||{};return this._getSerializedRecord(d).then(function(i){return new b(function(b,j){var k=Ember.A();d.eachRelationship(function(b,d){var e;switch(d.kind){case"hasMany":Ember.isArray(i[b])&&(e=f._saveHasManyRelationship(a,c,d,i[b],g,h),k.push(e),delete i[b]);break;case"belongsTo":"undefined"==typeof i[b]||null===i[b]||""===i[b]?delete i[b]:d.options.embedded===!0&&(e=f._saveBelongsToRecord(a,c,d,i[b],g),k.push(e),delete i[b])}}),Ember.RSVP.allSettled(k).then(function(a){a=Ember.A(a);var h=Ember.A(a.filterBy("state","rejected"));if(0!==h.get("length")){var k=new Error(e("Some errors were encountered while saving %@ %@",[c,d.id]));k.errors=h.mapBy("reason"),f._enqueue(j,[k])}g.update(i,function(a){a?f._enqueue(j,[a]):f._enqueue(b)})})})},e("DS: FirebaseAdapter#updateRecord %@ to %@",[c,g.toString()]))},_getSerializedRecord:function(a){var c=a.serialize({includeId:!1}),d=[];return a.eachRelationship(function(e,f){switch(f.kind){case"hasMany":d.push(b.cast(a.get(e)).then(function(a){c[e]=Ember.A(a).mapBy("id")}))}}),Ember.RSVP.all(d).then(function(){return c})},_saveHasManyRelationship:function(a,b,c,d,f,g){if(!Ember.isArray(d))throw new Error("hasMany relationships must must be an array");var h=this,i=Ember.A(g[c.key]);d=Ember.A(d);var j=d.filter(function(a){return!i.contains(a)}),k=d.filter(function(b){var d=c.type;return a.hasRecordForId(d,b)&&a.getById(d,b).get("isDirty")===!0});k=Ember.A(k.concat(j)).uniq().map(function(b){return h._saveHasManyRecord(a,c,f,b)});var l=i.filter(function(a){return!d.contains(a)});l=Ember.A(l).map(function(b){return h._removeHasManyRecord(a,c,f,b)});var m=k.concat(l);return Ember.RSVP.allSettled(m).then(function(a){var b=Ember.A(Ember.A(a).filterBy("state","rejected"));if(0===b.get("length"))return g[c.key]=d,a;var f=new Error(e("Some errors were encountered while saving a hasMany relationship %@ -> %@",[c.parentType,c.type]));throw f.errors=Ember.A(b).mapBy("reason"),f})},_saveHasManyRecord:function(a,c,d,e){var f=this,g=this._getRelationshipRef(d,c.key,e),h=a.getById(c.type,e),i=c.options.embedded===!0,j=i?h.serialize({includeId:!1}):!0;return new b(function(a,b){var c=function(c){c?("object"==typeof c&&(c.location=g.toString()),f._enqueue(b,[c])):f._enqueue(a)};i?g.update(j,c):g.set(j,c)})},_removeHasManyRecord:function(a,c,d,e){var f=this,g=this._getRelationshipRef(d,c.key,e);return new b(function(a,b){var c=function(c){c?("object"==typeof c&&(c.location=g.toString()),f._enqueue(b,[c])):f._enqueue(a)};g.remove(c)})},_saveBelongsToRecord:function(a,c,d,e,f){var g=this,h=f.child(d.key),i=a.getById(d.type,e),j=d.options.embedded===!0,k=j?i.serialize({includeId:!0}):!0;return new b(function(a,b){var c=function(c){c?("object"==typeof c&&(c.location=h.toString()),g._enqueue(b,[c])):g._enqueue(a)};j?h.update(k,c):h.set(k,c)})},deleteRecord:function(a,c,d){var f=this,g=this._getRef(c,d.get("id"));return new b(function(a,b){g.remove(function(c){c?f._enqueue(b,[c]):f._enqueue(a)})},e("DS: FirebaseAdapter#deleteRecord %@ to %@",[c,g.toString()]))},pathForType:function(a){var b=Ember.String.camelize(a);return Ember.String.pluralize(b)},_getRef:function(a,b){var c=this._ref;return a&&(c=c.child(this.pathForType(a.typeKey))),b&&(c=c.child(b)),c},_getRelationshipRef:function(a,b,c){return a.child(b).child(c)},_queueFlushDelay:1e3/60,_queueScheduleFlush:function(){Ember.run.later(this,this._queueFlush,this._queueFlushDelay)},_queueFlush:function(){d(this._queue,function(a){var b=a[0],c=a[1];b.apply(null,c)}),this._queue.length=0},_enqueue:function(a,b){var c=this._queue.push([a,b]);1===c&&this._queueScheduleFlush()},_recordCacheForType:void 0,_updateRecordCacheForType:function(a,b){if(b){var c=this,d=b.id,e=c._recordCacheForType,f=a.typeKey;a.eachRelationship(function(a,c){if("hasMany"===c.kind){var g=b[a];e[f]=e[f]||{},e[f][d]=e[f][d]||{},e[f][d][a]=Ember.isNone(g)?Ember.A():Ember.A(Ember.keys(g))}})}}}),Ember.onLoad("Ember.Application",function(a){a.initializer({name:"firebase",initialize:function(a,b){b.register("adapter:-firebase",DS.FirebaseAdapter),b.register("serializer:-firebase",DS.FirebaseSerializer)}})})}}();
+(function() {
+  "use strict";
+
+  /* Only enable if Ember Data is included */
+  if (window.DS === undefined) {
+    return;
+  }
+
+  var EmberFire = Ember.Namespace.create({
+    VERSION: '1.2.7'
+  });
+
+  if (Ember.libraries) {
+    Ember.libraries.registerCoreLibrary('EmberFire', EmberFire.VERSION);
+  }
+
+  //Monkeypatch the store until ED gives us a good way to listen to push events
+  DS.Store.reopen({
+    push: function(typeName, data, _partial) {
+      var record = this._super(typeName, data, _partial);
+      var adapter = this.adapterFor(record.constructor);
+      if (adapter.recordWasPushed) {
+        adapter.recordWasPushed(this, typeName, record);
+      }
+      return record;
+    },
+
+    recordWillUnload: function(record) {
+      var adapter = this.adapterFor(record.constructor);
+      if (adapter.recordWillUnload) {
+        adapter.recordWillUnload(this, record);
+      }
+    }
+  });
+  DS.Model.reopen({
+    unloadRecord: function() {
+      this.store.recordWillUnload(this);
+      return this._super();
+    }
+  });
+  // Shortcuts
+  var Promise = Ember.RSVP.Promise;
+  var map = Ember.EnumerableUtils.map;
+  var forEach = Ember.EnumerableUtils.forEach;
+  var fmt = Ember.String.fmt;
+
+
+ var toPromise = function(fn, context, _args, errorMsg) {
+  var args = _args || [];
+  return new Promise(function(resolve, reject) {
+    var callback = function(error) {
+      if (error) {
+        if (errorMsg && typeof error === 'object') {
+          error.location = errorMsg;
+        }
+        reject(error);
+      } else {
+        resolve();
+      }
+    };
+    args.push(callback);
+    fn.apply(context, args);
+  });
+};
+
+  /**
+    The Firebase serializer helps normalize relationships and can be extended on
+    a per model basis.
+  */
+  DS.FirebaseSerializer = DS.JSONSerializer.extend(Ember.Evented, {
+
+    //We need to account for Firebase turning key/value pairs with ids '1' and '0' into arrays
+    //See https://github.com/firebase/emberfire/issues/124
+    _normalizeNumberIDs: function(hash, key) {
+      var newHash = [];
+      if (hash[key][0] === true) {
+        newHash.push('0');
+      }
+      if (hash[key][1] === true) {
+        newHash.push('1');
+      }
+      hash[key] = newHash;
+    },
+
+    normalizeHasMany: function(type, hash, relationship) {
+      var key = relationship.key;
+      if (typeof hash[key] === 'object' && !Ember.isArray(hash[key])) {
+        hash[key] = Ember.keys(hash[key]);
+      }
+      //We need to account for Firebase turning key/value pairs with ids '1' and '0' into arrays
+      //See https://github.com/firebase/emberfire/issues/124
+      else if (Ember.isArray(hash[key]) && hash[key].length < 3 && (hash[key][0] === true || hash[key][1] === true)) {
+        this._normalizeNumberIDs(hash, key);
+      }
+      else if (Ember.isArray(hash[key])) {
+        throw new Error(fmt('%@ relationship %@(\'%@\') must be a key/value map in Firebase. Example: { "%@": { "%@_id": true } }', [type.toString(), relationship.kind, relationship.type.typeKey, key, relationship.type.typeKey]));
+      }
+    },
+
+    normalizeEmbeddedHasMany: function(type, hash, relationship) {
+      var key = relationship.key;
+      var embeddedRecordPayload = hash[key];
+      var embeddedKey;
+      if (!hash[key]) {
+        return;
+      }
+      for (embeddedKey in embeddedRecordPayload) {
+        var record = embeddedRecordPayload[embeddedKey];
+        if (record !== null && typeof record === 'object') {
+          record.id = embeddedKey;
+        }
+        this.store.push(relationship.type, this.normalize(relationship.type, record));
+      }
+      hash[key] = Ember.keys(hash[key]);
+    },
+
+    normalizeEmbeddedBelongsTo: function(type, hash, relationship) {
+      var key = relationship.key;
+      if (!hash[key]) {
+        return;
+      }
+      var embeddedRecordPayload = hash[key];
+      if (typeof embeddedRecordPayload.id !== 'string') {
+        throw new Error(fmt('Embedded relationship "%@" of "%@" must contain an "id" property in the payload', [relationship.type.typeKey, type]));
+      }
+      this.store.push(relationship.type, this.normalize(relationship.type, embeddedRecordPayload));
+      hash[key] = embeddedRecordPayload.id;
+    },
+
+    normalizeBelongsTo: Ember.K,
+    /**
+      Called after `extractSingle()`. This method checks the model
+      for `hasMany` relationships and makes sure the value is an object.
+      The object is then converted to an Array using `Ember.keys`
+    */
+    normalize: function(type, hash) {
+      var serializer = this;
+      // Check if the model contains any 'hasMany' relationships
+      type.eachRelationship(function(key, relationship) {
+        if (relationship.kind === 'hasMany') {
+          if (relationship.options.embedded) {
+            serializer.normalizeEmbeddedHasMany(type, hash, relationship);
+          } else {
+            serializer.normalizeHasMany(type, hash, relationship);
+          }
+        } else {
+          if (relationship.options.embedded) {
+            serializer.normalizeEmbeddedBelongsTo(type, hash, relationship);
+          } else {
+            serializer.normalizeBelongsTo(type, hash, relationship);
+          }
+        }
+      });
+      return this._super.apply(this, arguments);
+    },
+
+    /**
+      Called on a records returned from `find()` and all records
+      returned from `findAll()`
+
+      This method also checkes for `embedded: true`, extracts the
+      embedded records, pushes them into the store, and then replaces
+      the records with an array of ids
+    */
+    extractSingle: function(store, type, payload) {
+      return this.normalize(type, payload);
+    },
+
+    /**
+      Called after the adpter runs `findAll()` or `findMany()`. This method runs
+      `extractSingle()` on each item in the payload and as a result each item
+      will have `normalize()` called on it
+    */
+    extractArray: function(store, type, payload) {
+      return map(payload, function(item) {
+        return this.extractSingle(store, type, item);
+      }, this);
+    },
+
+    /**
+      Overrides ember-data's `serializeHasMany` to serialize oneToMany
+      relationships.
+    */
+    serializeHasMany: function(record, json, relationship) {
+      var key = relationship.key;
+      var payloadKey = this.keyForRelationship ? this.keyForRelationship(key, "hasMany") : key;
+      json[payloadKey] = Ember.A(record.get(key)).mapBy('id');
+    },
+
+    serializeBelongsTo: function(record, json, relationship) {
+      this._super(record, json, relationship);
+      var key = relationship.key;
+      var payloadKey = this.keyForRelationship ? this.keyForRelationship(key, "belongsTo") : relationship.key;
+      if (typeof json[key] === "undefined" || json[key] === '') {
+        delete json[key];
+      }
+    }
+
+  });
+
+  /**
+    The Firebase adapter allows your store to communicate with the Firebase
+    realtime service. To use the adapter in your app, extend DS.FirebaseAdapter
+    and customize the endpoint to point to the Firebase URL where you want this
+    data to be stored.
+
+    The adapter will automatically communicate with Firebase to persist your
+    records as neccessary. Importantly, the adapter will also update the store
+    in realtime when changes are made to the Firebase by other clients or
+    otherwise.
+  */
+  DS.FirebaseAdapter = DS.Adapter.extend(Ember.Evented, {
+
+    defaultSerializer: '-firebase',
+
+    /**
+      Endpoint paths can be customized by setting the Firebase property on the
+      adapter:
+
+      ```js
+      DS.FirebaseAdapter.extend({
+        firebase: new Firebase('https://<my-firebase>.firebaseio.com/')
+      });
+      ```
+
+      Requests for `App.Post` now target `https://<my-firebase>.firebaseio.com/posts`.
+
+      @property firebase
+      @type {Firebase}
+    */
+
+    init: function() {
+      if (!this.firebase || typeof this.firebase !== 'object') {
+        throw new Error('Please set the `firebase` property on the adapter.');
+      }
+      // If provided Firebase reference was a query (eg: limits), make it a ref.
+      this._ref = this.firebase.ref();
+      // Keep track of what types `.findAll()` has been called for
+      this._findAllMapForType = {};
+      // Keep a cache to check modified relationships against
+      this._recordCacheForType = {};
+      // Used to batch records into the store
+      this._queue = [];
+    },
+
+    /**
+      Uses push() to generate chronologically ordered unique IDs.
+    */
+    generateIdForRecord: function() {
+      return this._ref.push().name();
+    },
+
+    /**
+      Use the Firebase snapshot.name() as the record id
+
+      @param {Object} snapshot - A Firebase snapshot
+      @param {Object} payload - The payload that will be pushed into the store
+      @return {Object} payload
+    */
+    _assignIdToPayload: function(snapshot) {
+      var payload = snapshot.val();
+      if (payload !== null && typeof payload === 'object' && typeof payload.id === 'undefined') {
+        payload.id = snapshot.name();
+      }
+      return payload;
+    },
+
+    /**
+      Called by the store to retrieve the JSON for a given type and ID. The
+      method will return a promise which will resolve when the value is
+      successfully fetched from Firebase.
+
+      Additionally, from this point on, the object's value in the store will
+      also be automatically updated whenever the remote value changes.
+    */
+    find: function(store, type, id) {
+      var adapter = this;
+      var ref = this._getRef(type, id);
+      var serializer = store.serializerFor(type);
+
+      return new Promise(function(resolve, reject) {
+        ref.once('value', function(snapshot) {
+          var payload = adapter._assignIdToPayload(snapshot);
+          adapter._updateRecordCacheForType(type, payload);
+          if (payload === null) {
+            var error = new Error(fmt('no record was found at %@', [ref.toString()]));
+                error.recordId = id;
+            reject(error);
+          }
+          else {
+            resolve(payload);
+          }
+        },
+        function(err) {
+          reject(err);
+        });
+      }, fmt('DS: FirebaseAdapter#find %@ to %@', [type, ref.toString()]));
+    },
+
+    recordWasPushed: function(store, type, record) {
+      if (!record.__listening) {
+        this.listenForChanges(store, type, record);
+      }
+    },
+
+    recordWillUnload: function(store, record) {
+      var ref = this._getRef(record.typeKey, record.get('id'));
+      ref.off('value');
+    },
+
+    listenForChanges: function(store, type, record) {
+      record.__listening = true;
+      var serializer = store.serializerFor(type);
+      var adapter = this;
+      var ref = this._getRef(type, record.get('id'));
+      var called = false;
+      ref.on('value', function(snapshot) {
+        if (called) {
+          adapter._handleChildValue(store, type, serializer, snapshot);
+        }
+        called = true;
+      });
+    },
+
+    /**
+     findMany
+    */
+    findMany: undefined,
+
+    /**
+      Called by the store to retrieve the JSON for all of the records for a
+      given type. The method will return a promise which will resolve when the
+      value is successfully fetched from Firebase.
+
+      Additionally, from this point on, any records of this type that are added,
+      removed or modified from Firebase will automatically be reflected in the
+      store.
+    */
+    findAll: function(store, type) {
+      var adapter = this;
+      var ref = this._getRef(type);
+
+      return new Promise(function(resolve, reject) {
+        // Listen for child events on the type
+        ref.once('value', function(snapshot) {
+          if (!adapter._findAllHasEventsForType(type)) {
+            adapter._findAllAddEventListeners(store, type, ref);
+          }
+          var results = [];
+          snapshot.forEach(function(childSnapshot) {
+            var payload = adapter._assignIdToPayload(childSnapshot);
+            adapter._updateRecordCacheForType(type, payload);
+            results.push(payload);
+          });
+          resolve(results);
+        }, function(error) {
+          reject(error);
+        });
+      }, fmt('DS: FirebaseAdapter#findAll %@ to %@', [type, ref.toString()]));
+    },
+
+    /**
+      Keep track of what types `.findAll()` has been called for
+      so duplicate listeners aren't added
+    */
+    _findAllMapForType: undefined,
+
+    /**
+      Determine if the current type is already listening for children events
+    */
+    _findAllHasEventsForType: function(type) {
+      return !Ember.isNone(this._findAllMapForType[type]);
+    },
+
+    /**
+      After `.findAll()` is called on a type, continue to listen for
+      `child_added`, `child_removed`, and `child_changed`
+    */
+    _findAllAddEventListeners: function(store, type, ref) {
+      this._findAllMapForType[type] = true;
+
+      var adapter = this;
+      var serializer = store.serializerFor(type);
+
+      ref.on('child_added', function(snapshot) {
+        if (!store.hasRecordForId(type, snapshot.name())) {
+          adapter._handleChildValue(store, type, serializer, snapshot);
+        }
+      });
+    },
+
+    /**
+      Push a new child record into the store
+    */
+    _handleChildValue: function(store, type, serializer, snapshot) {
+      //No idea why we need this, we are alredy turning off the callback by
+      //calling ref.off in recordWillUnload. Something is fishy here
+      if (store.isDestroying) {
+        return;
+      }
+      var value = snapshot.val();
+      if (value === null) {
+        var id = snapshot.name();
+        var record = store.getById(type, id);
+        //TODO refactor using ED
+        if (!record.get('isDeleted')) {
+          record.deleteRecord();
+        }
+      } else {
+        var payload = this._assignIdToPayload(snapshot);
+        this._enqueue(function() {
+          store.push(type, serializer.extractSingle(store, type, payload));
+        });
+      }
+    },
+
+    /**
+      `createRecord` is an alias for `updateRecord` because calling \
+      `ref.set()` would wipe out any existing relationships
+    */
+    createRecord: function(store, type, record) {
+      var adapter = this;
+      return this.updateRecord(store, type, record).then(function() {
+        adapter.listenForChanges(store, type, record);
+      });
+    },
+
+    /**
+      Called by the store when a record is created/updated via the `save`
+      method on a model record instance.
+
+      The `updateRecord` method serializes the record and performs an `update()`
+      at the the Firebase location and a `.set()` at any relationship locations
+      The method will return a promise which will be resolved when the data and
+      any relationships have been successfully saved to Firebase.
+
+      We take an optional record reference, in order for this method to be usable
+      for saving nested records as well.
+
+    */
+    updateRecord: function(store, type, record, _recordRef) {
+      var adapter = this;
+      var recordRef = _recordRef || this._getRef(type, record.id);
+      var recordCache = Ember.get(adapter._recordCacheForType, fmt('%@.%@', [type.typeKey, record.get('id')])) || {};
+
+      var serializedRecord = record.serialize({includeId:false});
+
+      return new Promise(function(resolve, reject) {
+        var savedRelationships = Ember.A();
+        record.eachRelationship(function(key, relationship) {
+          var save;
+          if (relationship.kind === 'hasMany') {
+              if (serializedRecord[key]) {
+                save = adapter._saveHasManyRelationship(store, type, relationship, serializedRecord[key], recordRef, recordCache);
+                savedRelationships.push(save);
+                // Remove the relationship from the serializedRecord because otherwise we would clobber the entire hasMany
+                delete serializedRecord[key];
+              }
+          } else {
+              if (relationship.options.embedded === true && serializedRecord[key]) {
+                save = adapter._saveBelongsToRecord(store, type, relationship, serializedRecord[key], recordRef);
+                savedRelationships.push(save);
+                delete serializedRecord[key];
+              }
+          }
+        });
+
+        var relationshipsPromise = Ember.RSVP.allSettled(savedRelationships);
+        var recordPromise = adapter._updateRecord(recordRef, serializedRecord);
+
+        Ember.RSVP.hashSettled({relationships: relationshipsPromise, record: recordPromise}).then(function(promises) {
+          var rejected = Ember.A(promises.relationships.value).filterBy('state', 'rejected');
+          if (promises.record.state === 'rejected') {
+            rejected.push(promises.record);
+          }
+          // Throw an error if any of the relationships failed to save
+          if (rejected.length !== 0) {
+            var error = new Error(fmt('Some errors were encountered while saving %@ %@', [type, record.id]));
+                error.errors = rejected.mapBy('reason');
+            reject(error);
+          } else {
+            resolve();
+          }
+        });
+      }, fmt('DS: FirebaseAdapter#updateRecord %@ to %@', [type, recordRef.toString()]));
+    },
+
+    //Just update the record itself without caring for the relationships
+    _updateRecord: function(recordRef, serializedRecord) {
+      return toPromise(recordRef.update, recordRef, [serializedRecord]);
+    },
+
+    /**
+      Call _saveHasManyRelationshipRecord on each record in the relationship
+      and then resolve once they have all settled
+    */
+    _saveHasManyRelationship: function(store, type, relationship, ids, recordRef, recordCache) {
+      if (!Ember.isArray(ids)) {
+        throw new Error('hasMany relationships must must be an array');
+      }
+      var adapter = this;
+      var idsCache = Ember.A(recordCache[relationship.key]);
+      ids = Ember.A(ids);
+      var dirtyRecords = [];
+
+      // Added
+      var addedRecords = ids.filter(function(id) {
+        return !idsCache.contains(id);
+      });
+
+      // Dirty
+      dirtyRecords = ids.filter(function(id) {
+        var type = relationship.type;
+        return store.hasRecordForId(type, id) && store.getById(type, id).get('isDirty') === true;
+      });
+      dirtyRecords = Ember.A(dirtyRecords.concat(addedRecords)).uniq().map(function(id) {
+        return adapter._saveHasManyRecord(store, relationship, recordRef, id);
+      });
+      // Removed
+      var removedRecords = idsCache.filter(function(id) {
+        return !ids.contains(id);
+      });
+      removedRecords = Ember.A(removedRecords).map(function(id) {
+        return adapter._removeHasManyRecord(store, relationship, recordRef, id);
+      });
+      // Combine all the saved records
+      var savedRecords = dirtyRecords.concat(removedRecords);
+      // Wait for all the updates to finish
+      return Ember.RSVP.allSettled(savedRecords).then(function(savedRecords) {
+        var rejected = Ember.A(Ember.A(savedRecords).filterBy('state', 'rejected'));
+        if (rejected.get('length') === 0) {
+          // Update the cache
+          recordCache[relationship.key] = ids;
+          return savedRecords;
+        }
+        else {
+          var error = new Error(fmt('Some errors were encountered while saving a hasMany relationship %@ -> %@', [relationship.parentType, relationship.type]));
+              error.errors = Ember.A(rejected).mapBy('reason');
+          throw error;
+        }
+      });
+    },
+
+    /**
+      If the relationship is `async: true`, create a child ref
+      named with the record id and set the value to true
+
+      If the relationship is `embedded: true`, create a child ref
+      named with the record id and update the value to the serialized
+      version of the record
+    */
+    _saveHasManyRecord: function(store, relationship, parentRef, id) {
+      var ref = this._getRelationshipRef(parentRef, relationship.key, id);
+      var record = store.getById(relationship.type, id);
+      var isEmbedded = relationship.options.embedded === true;
+      if (isEmbedded) {
+        return this.updateRecord(store, relationship.type, record, ref);
+      }
+
+      return toPromise(ref.set, ref,  [true]);
+    },
+
+    /**
+      Remove a relationship
+    */
+    _removeHasManyRecord: function(store, relationship, parentRef, id) {
+      var ref = this._getRelationshipRef(parentRef, relationship.key, id);
+      return toPromise(ref.remove, ref, [], ref.toString());
+    },
+
+    /**
+      Save an embedded record
+    */
+    _saveBelongsToRecord: function(store, type, relationship, id, parentRef) {
+      var ref = parentRef.child(relationship.key);
+      var record = store.getById(relationship.type, id);
+      return this.updateRecord(store, relationship.type, record, ref);
+    },
+
+    /**
+      Called by the store when a record is deleted.
+    */
+    deleteRecord: function(store, type, record) {
+      var ref = this._getRef(type, record.get('id'));
+      return toPromise(ref.remove, ref);
+    },
+
+    /**
+      Determines a path fo a given type
+    */
+    pathForType: function(type) {
+      var camelized = Ember.String.camelize(type);
+      return Ember.String.pluralize(camelized);
+    },
+
+    /**
+      Return a Firebase reference for a given type and optional ID.
+    */
+    _getRef: function(type, id) {
+      var ref = this._ref;
+      if (type) {
+        ref = ref.child(this.pathForType(type.typeKey));
+      }
+      if (id) {
+        ref = ref.child(id);
+      }
+      return ref;
+    },
+
+    /**
+      Return a Firebase reference based on a relationship key and record id
+    */
+    _getRelationshipRef: function(ref, key, id) {
+      return ref.child(key).child(id);
+    },
+
+    /**
+      The amount of time (ms) before the _queue is flushed
+    */
+    _queueFlushDelay: (1000/60), // 60fps
+
+    /**
+      Called after the first item is pushed into the _queue
+    */
+    _queueScheduleFlush: function() {
+      Ember.run.later(this, this._queueFlush, this._queueFlushDelay);
+    },
+
+    /**
+      Call each function in the _queue and the reset the _queue
+    */
+    _queueFlush: function() {
+      forEach(this._queue, function(queueItem) {
+        var fn = queueItem[0];
+        var args = queueItem[1];
+        fn.apply(null, args);
+      });
+      this._queue.length = 0;
+    },
+
+    /**
+      Push a new function into the _queue and then schedule a
+      flush if the item is the first to be pushed
+    */
+    _enqueue: function(callback, args) {
+      //Only do the queueing if we scheduled a delay
+      if (this._queueFlushDelay) {
+        var length = this._queue.push([callback, args]);
+        if (length === 1) {
+          this._queueScheduleFlush();
+        }
+      } else {
+        callback.apply(null, args);
+      }
+    },
+
+    /**
+      A cache of hasMany relationships that can be used to
+      diff against new relationships when a model is saved
+    */
+    _recordCacheForType: undefined,
+
+    /**
+      _updateHasManyCacheForType
+    */
+    _updateRecordCacheForType: function(type, payload) {
+      if (!payload) { return; }
+      var adapter = this;
+      var id = payload.id;
+      var cache = adapter._recordCacheForType;
+      var typeKey = type.typeKey;
+      // Only cache relationships for now
+      type.eachRelationship(function(key, relationship) {
+        if (relationship.kind === 'hasMany') {
+          var ids = payload[key];
+          cache[typeKey] = cache[typeKey] || {};
+          cache[typeKey][id] = cache[typeKey][id] || {};
+          cache[typeKey][id][key] = !Ember.isNone(ids) ? Ember.A(Ember.keys(ids)) : Ember.A();
+        }
+      });
+    }
+
+  });
+
+  /**
+    Register the serializer and adapter
+  */
+  Ember.onLoad('Ember.Application', function(Application) {
+    Application.initializer({
+      name: 'firebase',
+      initialize: function(container, application) {
+        application.register('adapter:-firebase', DS.FirebaseAdapter);
+        application.register('serializer:-firebase', DS.FirebaseSerializer);
+      }
+    });
+  });
+
+})();

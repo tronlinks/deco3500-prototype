@@ -18,7 +18,7 @@
     <![endif]-->
 
     <!-- Random dependecies -->
-    <script src="/js/lib/jquery.js"></script>   
+    <script src="/js/lib/jquery.js"></script>
     <script src="/js/lib/bootstrap.min.js"></script>
 
     <!-- Maps stuff -->
@@ -26,7 +26,7 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
     <script src="/js/lib/gmaps.js"></script>
     <script src="/js/lib/locationpicker.jquery.js"></script>
-    <script src="/js/lib/jquery.geocomplete.min.js"></script>    
+    <script src="/js/lib/jquery.geocomplete.min.js"></script>
 
       <!-- Ember + Ember Data -->
     <script src="/js/lib/handlebars-v1.3.0.js"></script>
@@ -38,7 +38,7 @@
     <script src="/js/lib/moment.js"></script>
     <script src="/js/lib/jquery.velocity.min.js"></script>
     <script src="/js/lib/emberui.js"></script>
-    
+
     <!-- UserApp -->
     <script src="/js/lib/userapp.client.js"></script>
     <script src="/js/lib/ember-userapp.js"></script>
@@ -66,9 +66,9 @@
       <div class="pull-right" style="margin-top:8px">
           <div class="dropdown">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <span class="glyphicon glyphicon-user"></span> 
+            <span class="glyphicon glyphicon-user"></span>
             {{#if user.authenticated}}
-              {{user.current.email}} 
+              {{user.current.email}}
             {{else}}
               Not Logged In
             {{/if}}
@@ -78,20 +78,20 @@
               {{#if user.authenticated}}
                 <li>
                   <a href="#" {{action 'logout'}}>
-                    <span class="glyphicon glyphicon-log-out"></span> 
+                    <span class="glyphicon glyphicon-log-out"></span>
                     Log Out
                   </a>
                 </li>
               {{else}}
                 <li>
                   {{#link-to 'login'}}
-                    <span class="glyphicon glyphicon-log-in"></span> 
+                    <span class="glyphicon glyphicon-log-in"></span>
                     Login
                   {{/link-to}}
                 </li>
                 <li>
                   {{#link-to 'signup'}}
-                    <span class="glyphicon glyphicon-heart"></span> 
+                    <span class="glyphicon glyphicon-heart"></span>
                     Sign Up
                   {{/link-to}}
                 </li>
@@ -108,21 +108,21 @@
 
 <script type="text/x-handlebars" data-template-name="newissue">
     <div class="wrapper">
-    <form class="form-signin" >       
+    <form class="form-signin" >
       <h2 class="form-signin-heading">New Issue</h2>
         {{eui-input valueBinding='Issue Title'}}
 <br /><br />
         {{eui-input valueBinding='Issue Content'}}
-            
+
 		<br /><br />
-		{{eui-button label='Create Issue' action='createIssue'}} 
+		{{eui-button label='Create Issue' action='createIssue'}}
     </form>
   </div>
 </script>
 
 <script type="text/x-handlebars" data-template-name="newpost">
     <div class="wrapper">
-    <form class="form-signin" >       
+    <form class="form-signin" >
       <h2 class="form-signin-heading">Creating Post for <b>{{issue}}</b> Issue</h2>
           {{eui-input valueBinding='postTitle'}}<br />
 		  {{eui-input valueBinding='postContent'}}<br />
@@ -131,7 +131,7 @@
 
     </form>
   </div>
-  
+
   {{eui-input valueBinding='postTitle'}}
   {{eui-input valueBinding='postContent'}}
   {{location-picker latitude=latitude longitude=longitude radius=radius}}
@@ -157,7 +157,7 @@
 				<li role="presentation" class="divider"></li>
 				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
 			  </ul>
-			</div> 
+			</div>
 		  </div>
 		  <div >
 			<form class="form-inline" role="form">
@@ -166,16 +166,16 @@
 				  <div class="input-group-addon">International</div>
 				  <input class="form-control" type="email" placeholder="National">
 				</div>
-			  </div>			
+			  </div>
 			  <div class="form-group">
 				<input type="email" class="form-control" id="exampleInputEmail2" placeholder="State">
 			  </div>
 			</form>
 		 </div>
-	   </div>  
+	   </div>
 	   <!--div end -->
 	   <div style="clear:both"></div><br />
-        <!--map div-->  
+        <!--map div-->
         {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
       </div>
       <!--issues-->
@@ -187,20 +187,20 @@
               <h2>
                 {{issue.title}}
               </h2>
-              <span class="glyphicon glyphicon-time"></span> 
+              <span class="glyphicon glyphicon-time"></span>
               {{issue.created}}, first spotted
               <br/>
-              <span class="glyphicon glyphicon-pencil"></span> 
+              <span class="glyphicon glyphicon-pencil"></span>
               {{issue.created}}, last updated
               <br/>
-              {{!--  
+              {{!--
               <a href="index.html">
-                <span class="glyphicon glyphicon-globe"></span> 
+                <span class="glyphicon glyphicon-globe"></span>
 
               </a>
               <br/>
                --}}
-              <span class="glyphicon glyphicon-send"></span> 
+              <span class="glyphicon glyphicon-send"></span>
               {{#if issue.posts}}
                 {{issue.posts.length}} Posts
               {{else}}
@@ -213,25 +213,25 @@
                   {{issue.content}}
                 {{else}}
                   No content yet.
-                {{/if}}   
+                {{/if}}
               </p>
-            </div>       
+            </div>
             {{/link-to}}
           {{/each}}
 
-          
+
         </div>
-		
+
 		<div class="well new">
               {{#link-to 'newissue'}}
                 <span class="glyphicon glyphicon-plus"></span>
                 Add new issue
               {{/link-to}}
           </div>
-		
-      </div>        
-    </div>        
-  </div>        
+
+      </div>
+    </div>
+  </div>
 </script>
 
 <script type="text/x-handlebars" data-template-name="loading">
@@ -249,10 +249,10 @@
         {{#if content}}
           {{content}}
         {{/if}}
-        <!--map div-->   
+        <!--map div-->
         {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
       </div>
-      
+
       <!--posts -->
       <div class='col-md-4' id="content">
         <div id="subcontent">
@@ -261,14 +261,14 @@
               <h2>
                 {{post.title}}
               </h2>
-              <span class="glyphicon glyphicon-time"></span> 
+              <span class="glyphicon glyphicon-time"></span>
               {{post.created}}
               <br/>
-              <span class="glyphicon glyphicon-globe"></span> 
+              <span class="glyphicon glyphicon-globe"></span>
               {{post.longitude}}, {{post.latitude}}
               <br/>
-              
-              <span class="glyphicon glyphicon-user"></span> 
+
+              <span class="glyphicon glyphicon-user"></span>
               {{#if post.user}}
                 {{post.user.email}}
               {{else}}
@@ -282,34 +282,28 @@
             </div>
           {{/each}}
 
-<<<<<<< HEAD
+
           <div class="well">
               {{#link-to 'newpost' id}}
-=======
-          
-        </div>
-		<div class="well">
-              {{#link-to 'newpost'}}
->>>>>>> FETCH_HEAD
                 <span class="glyphicon glyphicon-plus"></span>
-                Add new posts to issue 
+                Add new posts to issue
               {{/link-to}}
           </div>
-      </div>  
-    </div>        
-  </div>        
+      </div>
+    </div>
+  </div>
 </script>
 
 <script type="text/x-handlebars" data-template-name="login">
   <div class="wrapper">
-    <form class="form-signin" {{action login on='submit'}}>       
+    <form class="form-signin" {{action login on='submit'}}>
       <h2 class="form-signin-heading">Please login</h2>
 	          <label for="username">Username</label>
         {{input id='username' placeholder='Enter Username' class='form-control' value=username}}
 		        <label for="password">Password</label>        <label for="password">Password</label>
-        {{input id='password' placeholder='Enter Password' class='form-control' type='password' value=password}}     
+        {{input id='password' placeholder='Enter Password' class='form-control' type='password' value=password}}
 		<br />
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>   
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
     </form>
 	{{#if error}}
         <div class="alert alert-error">{{error.message}}</div>
@@ -320,7 +314,7 @@
 
 <script type="text/x-handlebars" data-template-name="signup">
   <div class="wrapper">
-    <form class="form-signin" {{action signup on='submit'}}>       
+    <form class="form-signin" {{action signup on='submit'}}>
       <h2 class="form-signin-heading">Sign Up</h2>
         <label for="username">Username</label>
         {{input id='username' placeholder='Enter a Username' class='form-control' value=username}}
@@ -328,16 +322,16 @@
         {{input id='email' placeholder='Enter your Email' class='form-control' value=email}}
         <label for="password">Password</label>
         {{input id='password' placeholder='Enter a Password' class='form-control' type='password' value=password}}
-        
+
 		<br />
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>   
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
     </form>
 	{{#if error}}
         <div class="alert alert-error">{{error.message}}</div>
     {{/if}}
   </div>
 </script>
-  
+
 <script type="text/x-handlebars" id="components/google-maps">
   <div class="map-canvas"></div>
 </script>
@@ -345,7 +339,7 @@
 <script type="text/x-handlebars" id="components/location-picker">
   Location: <input type="text" id="picker-address"/>
   Radius: <input type="text" id="picker-radius"/>
-  <div id="location-picker"></div>       
+  <div id="location-picker"></div>
   Lat.: <input type="text" id="picker-latitude"/>
   Long.: <input type="text" id="picker-longitude"/>
 </script>

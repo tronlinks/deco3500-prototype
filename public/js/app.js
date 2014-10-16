@@ -4,7 +4,7 @@ $(function(){
 Ember.Application.initializer({
   name: 'userapp',
   initialize: function(container, application) {
-    Ember.UserApp.setup(application, { 
+    Ember.UserApp.setup(application, {
       appId: '543519ac41525',
       loginRoute: 'login',
       indexRoute: 'index',
@@ -44,7 +44,7 @@ App.Issue = DS.Model.extend({
   updated: DS.attr(''),
   uid: DS.attr(''),
   user: DS.attr(''),
-  posts: DS.hasMany('post', { asyn: true }) // misspelled on purpose!!!!! HACK TO-DO
+  posts: DS.hasMany('post', { async: true }) // misspelled on purpose!!!!! HACK TO-DO
 });
 
 App.Router.map(function() {
@@ -77,7 +77,7 @@ App.IndexController = Ember.Controller.extend({
     //code for an array of issue coordinates
   ]
 });
-  
+
 App.IssueRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
   model: function(params){
     return this.store.find('issue', params.issueID);
@@ -105,7 +105,7 @@ App.IssueController = Ember.ObjectController.extend({
     })
 
 
-   
+
   }.property()
 
     // [
@@ -118,9 +118,9 @@ App.NewissueController = Ember.Controller.extend({
     issueContent: "issue brief description",
     actions: {
       createIssue: function(){
-        
+
         var _this = this;
-        
+
         // Create new Issue
         var newIssue = _this.store.createRecord('issue', {
           title: _this.get('issueTitle'),
@@ -141,7 +141,7 @@ App.NewissueController = Ember.Controller.extend({
           console.log('created issue unsuccessful');
           debugger;
         })
-        
+
         //redirect back to issues page
         this.transitionTo('index');
       }
@@ -197,7 +197,7 @@ App.GoogleMapsComponent = Ember.Component.extend({
 
     var options = {
       center: new google.maps.LatLng(
-          this.get('latitude'), 
+          this.get('latitude'),
           this.get('longitude')
         ),
         zoom: 12,
@@ -209,13 +209,13 @@ App.GoogleMapsComponent = Ember.Component.extend({
 
     this.setMarkers();
   }.on('didInsertElement'),
-  
+
   coordinatesChanged: function() {
     var map = this.get('map');
 
     if (map) map.setCenter(new google.maps.LatLng(this.get('latitude'), this.get('longitude')));
   }.observes('latitude', 'longitude'),
-  
+
   setMarkers: function() {
     var map = this.get('map'),
       markers = this.get('markers'),
@@ -236,7 +236,7 @@ App.GoogleMapsComponent = Ember.Component.extend({
     }
   }.observes('markers.@each.latitude', 'markers.@each.longitude')
 });
-  
+
 App.NewpostRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
   model: function(params){
     return this.store.find('issue', params.issueID);
@@ -253,7 +253,7 @@ App.NewpostController = Ember.Controller.extend({
 
     navigator.geolocation.getCurrentPosition(function(position) {
     coords = position.coords
-    console.log(coords); 
+    console.log(coords);
     debugger;
     _this.set('latitude', coords.latitude);
     _this.set('longitude', coords.longitude);
@@ -282,7 +282,7 @@ App.NewpostController = Ember.Controller.extend({
 
         //save post to firebase
         var newPostPromise = newPost.save();
-        
+
         //add post to the issue and save to firebase
         newPostPromise.then(function(){
           issue.get('posts').addObject(newPost);
@@ -290,11 +290,11 @@ App.NewpostController = Ember.Controller.extend({
           modelPromise.then(function(){
             // debugger;
           }, function(argument) {
-            debugger;                
+            debugger;
           });
         })
       })
-      
+
       //redirect to the issue page
       this.transitionTo('issue', _this.get('model.id'));
 
