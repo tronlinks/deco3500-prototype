@@ -6,7 +6,7 @@ html, body {
 }
 
 .fullscreen {
-  height: 100%;
+  height: 85vh;
 }
 
 .map-canvas {
@@ -115,5 +115,5 @@ canvas {-ms-touch-action: double-tap-zoom;}
 }
 
 #loading > img {
-  
+
 }

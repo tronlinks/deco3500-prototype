@@ -88,29 +88,28 @@ App.IssueController = Ember.ObjectController.extend({
     latitude: "-27.4679",
     longitude: "153.0278",
   },
-  markers: [
-    //code for an array of issue coordinates
-  ]
+  markers:
+  function() {
+    var array = []
+    this.get('model').get('posts').then(function(a){
 
-  // function() {
-  //   var array = []
-  //   // debugger;
-  //   this.get('model').get('posts').forEach(function(post){
-  //     console.log(post.get('latitude'), post.get('longitude'));
-  //     markerObject = Ember.Object.create({
-  //       latitude: post.get('latitude'),
-  //       longitude: post.get('longitude')});
-  //     array.addObject(markerObject);
-  //   });
+       a.forEach(function(post){
+        debugger;
+        console.log(post.get('latitude'), post.get('longitude'));
+        markerObject = Ember.Object.create({
+          latitude: post.get('latitude'),
+          longitude: post.get('longitude')});
+        array.addObject(markerObject);
+      });
+      return array
+    })
 
-  //   return array
-  // }.property()
+
+   
+  }.property()
 
     // [
-    // Ember.Object.create({ latitude: 50.08703, longitude: 14.42024 }),
-    // Ember.Object.create({ latitude: 50.08703, longitude: 14.42024 }),  // Prague
-    // Ember.Object.create({ latitude: 40.71356, longitude: -74.00632 }), // New York
-    // Ember.Object.create({ latitude: -33.86781, longitude: 151.20754 }) // Sydnet
+
     // ]
 });
 
@@ -152,7 +151,15 @@ App.NewissueController = Ember.Controller.extend({
 App.LocationPickerComponent = Ember.Component.extend({
   latitude: 0,
   longitude: 0,
-  radius: 300,
+  radius: 0,
+  updateTrigger: function(){
+    //gmaps code to set new cordinates
+    debugger;
+    var latitude = this.get('latitude');
+    var longitude = this.get('longitude');
+    this.$('#picker-latitude').val(latitude);
+    this.$('#picker-longitude').val(longitude);
+  }.observes('latitude', 'longitude'),
   chooseLocation: function() {
     var _this = this;
     var container = _this.$('#location-picker');
@@ -178,10 +185,8 @@ App.LocationPickerComponent = Ember.Component.extend({
         // console.log("Location changed. New location (" + currentLocation.latitude + ", " + currentLocation.longitude + ")");
       }
     }
-
     //initialise location picker
     container.locationpicker(options);
-
   }.on('didInsertElement')
 });
 
@@ -202,7 +207,7 @@ App.GoogleMapsComponent = Ember.Component.extend({
     this.set('map', new google.maps.Map(container[0], options));
     this.set('markerCache', []);
 
-    // this.setMarkers();
+    this.setMarkers();
   }.on('didInsertElement'),
   
   coordinatesChanged: function() {
@@ -245,39 +250,15 @@ App.NewpostController = Ember.Controller.extend({
   longitude: "153.0278",
   latitudeSetter: function() {
     var _this = this;
-    
-    // get geolocation
+
     navigator.geolocation.getCurrentPosition(function(position) {
     coords = position.coords
-    console.log(result); 
+    console.log(coords); 
+    debugger;
     _this.set('latitude', coords.latitude);
     _this.set('longitude', coords.longitude);
     });
   }.on('init'),
-  // longitude: function() {
-  //   result = 0
-  //   return 153.0278}.property(),
-  // latitude: function() {
-  //   var lat;
-  //   navigator.geolocation.getCurrentPosition(function(position) {
-  //     console.log(position.coords.latitude);
-  //     lat = position.coords.latitude 
-  //   });
-  //     return lat 
-  // }.property,
-  // longitude: function() {
-  //   navigator.geolocation.getCurrentPosition(function(position) {
-  //     return 153.0278
-  //     console.log(position.coords.longitude);
-  //   })
-  // }.property,
-  // latitude: this.geoLocate('longitude'),
-  // longitude: this.geoLocate('latitude'),
-  // geoLocate: function(direction) {
-  //   navigator.geolocation.getCurrentPosition(function(position, direction) {
-  //     return position.coords.direction
-  //   });
-  // },
   actions: {
     createPost: function(){
       var _this = this;
