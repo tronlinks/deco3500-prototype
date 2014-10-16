@@ -66,7 +66,7 @@
        {{#link-to 'index'}} <img src="images/Grapevine-Mockups.png" height="50px"/> {{/link-to}}
       </div>
       <div class="pull-right" style="margin-top:8px">
-          <div class="dropdown">
+          <div class="dropdown" id="navProfileButton">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
             <span class="glyphicon glyphicon-user"></span>
             {{#if user.authenticated}}
@@ -109,75 +109,40 @@
 </script>
 
 <script type="text/x-handlebars" data-template-name="newissue">
-    <div class="wrapper">
-    <form class="form-signin" >
+  <div class="wrapper">
+    <form class="form-signin" id="newpost">
       <h2 class="form-signin-heading">New Issue</h2>
-        {{eui-input valueBinding='Issue Title'}}
-<br /><br />
-        {{eui-input valueBinding='Issue Content'}}
-
-		<br /><br />
+      {{eui-input valueBinding='Issue Title'}}
+      <br/><br/>
+      {{eui-input valueBinding='Issue Content'}}
+		  <br/><br/>
 		{{eui-button label='Create Issue' action='createIssue'}}
     </form>
   </div>
 </script>
 
 <script type="text/x-handlebars" data-template-name="newpost">
-    <div class="wrapper">
+  <div class="wrapper center">
     <form class="form-signin" >
-      <h2 class="form-signin-heading">Creating Post for <b>{{issue}}</b> Issue</h2>
-          {{eui-input valueBinding='postTitle'}}<br />
-		  {{eui-input valueBinding='postContent'}}<br />
-		  {{location-picker latitude=latitude longitude=longitude radius=radius}}<br />
-		  {{eui-button label='Create Post' action='createPost'}}
-
+      <h2 class="form-signin-heading">
+        Creating Post for <b>{{title}}</b> Issue
+      </h2>
+      {{eui-input valueBinding='postTitle'}}<br />
+  	  {{eui-input valueBinding='postContent'}}<br />
+  	  {{location-picker latitude=latitude longitude=longitude radius=radius}}<br />
+  	  {{eui-button label='Create Post' action='createPost'}}
     </form>
   </div>
-
-  {{eui-input valueBinding='postTitle'}}
+{{!--   {{eui-input valueBinding='postTitle'}}
   {{eui-input valueBinding='postContent'}}
   {{location-picker latitude=latitude longitude=longitude radius=radius}}
-  {{eui-button label='Create Post' action='createPost'}}
+  {{eui-button label='Create Post' action='createPost'}} --}}
 </script>
 
 <script type="text/x-handlebars" data-template-name="index">
   <div class='container-fluid fullscreen'>
     <div class='row fullscreen'>
       <div class='col-md-8 fullscreen'>
- 	   <!--dropbox and search div-->
-	   <div class='col-md-8'>
-		  <div class="pull-right">
-			<div class="dropdown">
-			  <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-				All Categories
-				<span class="caret"></span>
-			  </button>
-			  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Action</a></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>
-				<li role="presentation" class="divider"></li>
-				<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>
-			  </ul>
-			</div>
-		  </div>
-		  <div >
-			<form class="form-inline" role="form">
-			  <div class="form-group">
-				<div class="input-group">
-				  <div class="input-group-addon">International</div>
-				  <input class="form-control" type="email" placeholder="National">
-				</div>
-			  </div>
-			  <div class="form-group">
-				<input type="email" class="form-control" id="exampleInputEmail2" placeholder="State">
-			  </div>
-			</form>
-		 </div>
-	   </div>
-	   <!--div end -->
-	   <div style="clear:both"></div><br />
-        <!--map div-->
         {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
       </div>
       <!--issues-->

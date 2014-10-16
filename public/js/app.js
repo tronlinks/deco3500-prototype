@@ -169,7 +169,7 @@ App.LocationPickerComponent = Ember.Component.extend({
   radius: 0,
   updateTrigger: function(){
     //gmaps code to set new cordinates
-    debugger;
+    // debugger;
     var latitude = this.get('latitude');
     var longitude = this.get('longitude');
     this.$('#picker-latitude').val(latitude);
@@ -306,7 +306,7 @@ App.NewpostController = Ember.Controller.extend({
     navigator.geolocation.getCurrentPosition(function(position) {
     coords = position.coords
     console.log(coords);
-    debugger;
+    // debugger;
     _this.set('latitude', coords.latitude);
     _this.set('longitude', coords.longitude);
     });

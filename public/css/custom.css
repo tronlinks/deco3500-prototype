@@ -6,39 +6,52 @@ html, body {
 }
 
 .fullscreen {
-  height: 85vh;
+  height: 75vh;
+}
+
+.center {
+  margin: 0 auto;
+}
+
+.wrapper {	
+	margin-top: 40px;
+  margin-bottom: 80px;
 }
 
 .map-canvas {
   height: 100%;
 }
 
+#location-picker {
+  width: 90%; 
+  height: 400px;
+}
+
 #header {
-	background-color: #23262d;
+  background-color: #23262d;
+}
+
+#navProfileButton {
+  width:100%;
 }
 
 #search {
-	width:200px;
+  width:200px;
+  margin-top:8px;
+}
 
-	margin-top:8px;
+#content {
+  height:85vh;
+  background: grey;
 }
 
 #subcontent {
-	overflow: scroll;
-	height:85vh
+  overflow: scroll;
 }
 
 #mc {
-
-	margin:auto;
-	margin-top:100px;
-
-}
-
-
-.wrapper {	
-	margin-top: 40px;
-  margin-bottom: 80px;
+  margin:auto;
+  margin-top:100px;
 }
 
 .form-signin {
@@ -47,39 +60,44 @@ html, body {
   margin: 0 auto;
   background-color: #fff;
   border: 1px solid rgba(0,0,0,0.1);  
+}
 
-  .form-signin-heading,
-	.checkbox {
+#newPost {
+
+}
+
+.form-signin-heading,
+.checkbox {
 	  margin-bottom: 30px;
-	}
+}
 
-	.checkbox {
-	  font-weight: normal;
-	}
+.checkbox {
+  font-weight: normal;
+}
 
-	.form-control {
-	  position: relative;
-	  font-size: 16px;
-	  height: auto;
-	  padding: 10px;
-		@include box-sizing(border-box);
+.form-control {
+  position: relative;
+  font-size: 16px;
+  height: auto;
+  padding: 10px;
+	@include box-sizing(border-box);
 
-		&:focus {
-		  z-index: 2;
-		}
+	&:focus {
+	  z-index: 2;
 	}
+}
 
-	input[type="text"] {
-	  margin-bottom: -1px;
-	  border-bottom-left-radius: 0;
-	  border-bottom-right-radius: 0;
-	}
+input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
 
-	input[type="password"] {
-	  margin-bottom: 20px;
-	  border-top-left-radius: 0;
-	  border-top-right-radius: 0;
-	}
+input[type="password"] {
+  margin-bottom: 20px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
 
 
 
@@ -125,45 +143,39 @@ canvas {-ms-touch-action: double-tap-zoom;}
 }
 
 .left-inner-addon {
-    position: relative;
+  position: relative;
 }
+
 .left-inner-addon input {
-    padding-left: 30px;    
+  padding-left: 30px;    
 }
+
 .left-inner-addon i {
-    position: absolute;
-    padding: 10px 12px;
-    pointer-events: none;
+  position: absolute;
+  padding: 10px 12px;
+  pointer-events: none;
 }
 
 .right-inner-addon {
-    position: relative;
+  position: relative;
 }
+
 .right-inner-addon input {
-    padding-right: 30px;    
+  padding-right: 30px;    
 }
+
 .right-inner-addon i {
-    position: absolute;
-    right: 0px;
-    padding: 10px 12px;
-    pointer-events: none;
+  position: absolute;
+  right: 0px;
+  padding: 10px 12px;
+  pointer-events: none;
 }
 
-#location-picker {
-  /*tron please make these %, not px, so scalable on mobile*/
-  width: 500px; 
-  height: 400px;
-}
-
-#loading, #loading > img {
+#loading {
   background: red;
   height: 50%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-}
-
-#loading > img {
-
 }
