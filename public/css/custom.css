@@ -6,7 +6,7 @@ html, body {
 }
 
 .fullscreen {
-  height: 75vh;
+  height: 85vh;
 }
 
 .center {
@@ -41,13 +41,22 @@ html, body {
 }
 
 #content {
-  height:85vh;
-  background: grey;
+  height: 100%;
+  position:relative;
+  background: #fafafa;
 }
 
 #subcontent {
+  height:90%;
+  padding-top: 3%;
   overflow: scroll;
 }
+
+/*#newitem {
+  /*to fix at bottom
+  position:absolute;
+  bottom:0;
+}*/
 
 #mc {
   margin:auto;
@@ -62,9 +71,10 @@ html, body {
   border: 1px solid rgba(0,0,0,0.1);  
 }
 
-#newPost {
-
+#form-newpost {
+  max-width: 600px;
 }
+
 
 .form-signin-heading,
 .checkbox {

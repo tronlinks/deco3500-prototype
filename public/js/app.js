@@ -129,8 +129,8 @@ App.IssueController = Ember.ObjectController.extend({
 });
 
 App.NewissueController = Ember.Controller.extend({
-    issueTitle: "issue title",
-    issueContent: "issue brief description",
+    issueTitle: "Issue title",
+    issueContent: "Issue brief description",
     actions: {
       createIssue: function(){
 
@@ -304,11 +304,11 @@ App.NewpostController = Ember.Controller.extend({
     var _this = this;
 
     navigator.geolocation.getCurrentPosition(function(position) {
-    coords = position.coords
-    console.log(coords);
-    // debugger;
-    _this.set('latitude', coords.latitude);
-    _this.set('longitude', coords.longitude);
+      coords = position.coords
+      console.log(coords);
+      debugger;
+      _this.set('latitude', coords.latitude);
+      _this.set('longitude', coords.longitude);
     });
   }.on('init'),
   actions: {

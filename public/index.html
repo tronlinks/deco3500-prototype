@@ -112,9 +112,9 @@
   <div class="wrapper">
     <form class="form-signin" id="newpost">
       <h2 class="form-signin-heading">New Issue</h2>
-      {{eui-input valueBinding='Issue Title'}}
+      {{eui-input valueBinding='issueTitle'}}
       <br/><br/>
-      {{eui-input valueBinding='Issue Content'}}
+      {{eui-input valueBinding='issueContent'}}
 		  <br/><br/>
 		{{eui-button label='Create Issue' action='createIssue'}}
     </form>
@@ -123,9 +123,9 @@
 
 <script type="text/x-handlebars" data-template-name="newpost">
   <div class="wrapper center">
-    <form class="form-signin" >
+    <form class="form-signin" id='form-newpost'>
       <h2 class="form-signin-heading">
-        Creating Post for <b>{{title}}</b> Issue
+        Creating Post for {{title}} Issue
       </h2>
       {{eui-input valueBinding='postTitle'}}<br />
   	  {{eui-input valueBinding='postContent'}}<br />
@@ -146,7 +146,7 @@
         {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
       </div>
       <!--issues-->
-      <div class='col-md-4' id="content">
+      <div class='col-md-4' id="content" class="fullscreen">
         <div id="subcontent" >
           {{#each issue in model}}
             {{#link-to 'issue' issue.id}}
@@ -171,7 +171,7 @@
               {{#if issue.posts}}
                 {{issue.posts.length}} Posts
               {{else}}
-                0 Posts.
+                0 Posts
               {{/if}}
               <br/>
               <br/>
@@ -185,16 +185,13 @@
             </div>
             {{/link-to}}
           {{/each}}
-
-
         </div>
-
-		<div class="well new">
-              {{#link-to 'newissue'}}
-                <span class="glyphicon glyphicon-plus"></span>
-                Add new issue
-              {{/link-to}}
-          </div>
+		    <div class="well" id="newitem">
+          {{#link-to 'newissue'}}
+            <span class="glyphicon glyphicon-plus"></span>
+            Add new issue
+          {{/link-to}}
+        </div>
 
       </div>
     </div>
@@ -221,7 +218,7 @@
       </div>
 
       <!--posts -->
-      <div class='col-md-4' id="content">
+      <div class='col-md-4' id="content" class="fullscreen">
         <div id="subcontent">
          {{#each post in issue.posts}}
             <div class='well'>
@@ -250,7 +247,7 @@
           {{/each}}
 
 
-          <div class="well">
+          <div class="well newitem">
               {{#link-to 'newpost' issue.id}}
                 <span class="glyphicon glyphicon-plus"></span>
                 Add new posts to issue
