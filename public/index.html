@@ -111,10 +111,12 @@
 <script type="text/x-handlebars" data-template-name="newissue">
   <div class="wrapper">
     <form class="form-signin" id="newpost">
-      <h2 class="form-signin-heading">New Issue</h2>
+      <h2 class="form-signin-heading">
+        New Issue
+      </h2>
       {{eui-input valueBinding='issueTitle'}}
       <br/><br/>
-      {{eui-input valueBinding='issueContent'}}
+      {{eui-textarea width='80%' valueBinding='issueContent' placeholder='Enter brief description here'}}
 		  <br/><br/>
 		{{eui-button label='Create Issue' action='createIssue'}}
     </form>
@@ -125,10 +127,10 @@
   <div class="wrapper center">
     <form class="form-signin" id='form-newpost'>
       <h2 class="form-signin-heading">
-        Creating Post for {{title}} Issue
+        New Post 
       </h2>
-      {{eui-input valueBinding='postTitle'}}<br />
-  	  {{eui-input valueBinding='postContent'}}<br />
+      {{eui-input valueBinding='postTitle' placeholder='Enter title here'}}<br /><br />
+  	  {{eui-textarea width='80%' valueBinding='postContent' placeholder='Enter content here'}}<br /><br />
   	  {{location-picker latitude=latitude longitude=longitude radius=radius}}<br />
   	  {{eui-button label='Create Post' action='createPost'}}
     </form>
@@ -210,9 +212,16 @@
     <div class='row fullscreen'>
       <div class='col-md-8 fullscreen'>
         <h1>{{issue.title}}</h1>
+        <span class="glyphicon glyphicon-time"></span>
+        {{issue.created}}, first spotted
+        <br/>
+        <span class="glyphicon glyphicon-pencil"></span>
+        {{issue.created}}, last updated
+        <br/><br/>
         {{#if issue.content}}
           {{issue.content}}
-        {{/if}}
+        {{/if}}        
+        <br/> <br/>
         <!--map div-->
         {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
       </div>
@@ -229,7 +238,7 @@
               {{post.created}}
               <br/>
               <span class="glyphicon glyphicon-globe"></span>
-              {{post.longitude}}, {{post.latitude}}
+              {{post.latitude}}, {{post.longitude}}
               <br/>
 
               <span class="glyphicon glyphicon-user"></span>
@@ -301,11 +310,11 @@
 </script>
 
 <script type="text/x-handlebars" id="components/location-picker">
-  Location: <input type="text" id="picker-address"/>
-  Radius: <input type="text" id="picker-radius"/>
-  <div id="location-picker"></div>
-  Lat.: <input type="text" id="picker-latitude"/>
-  Long.: <input type="text" id="picker-longitude"/>
+  Location: <input type="text" id="picker-address" class='form-control'/> <br/>
+  <div id="location-picker"></div> <br/>
+  Radius: <input type="text" id="picker-radius" class='form-control'/> <br/>
+  Latitude: <input type="text" id="picker-latitude" class='form-control' disabled/> <br/>
+  Longitude: <input type="text" id="picker-longitude" class='form-control' disabled/>
 </script>
 
 

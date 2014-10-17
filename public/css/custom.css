@@ -24,6 +24,7 @@ html, body {
 
 #location-picker {
   width: 90%; 
+  margin: auto;
   height: 400px;
 }
 

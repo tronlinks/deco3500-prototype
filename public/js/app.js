@@ -75,6 +75,9 @@ App.IndexController = Ember.Controller.extend({
   },
   markers: [
     //code for an array of issue coordinates
+    Ember.Object.create({ latitude: -33.86781, longitude: 151.20754 }), // Sydnet
+    Ember.Object.create({ latitude: -28, longitude: 153 }), 
+    Ember.Object.create({ latitude: -27, longitude: 153 }) // Sydnet
   ]
 });
 
@@ -133,7 +136,6 @@ App.NewissueController = Ember.Controller.extend({
     issueContent: "Issue brief description",
     actions: {
       createIssue: function(){
-
         var _this = this;
 
         // Create new Issue
@@ -169,7 +171,7 @@ App.LocationPickerComponent = Ember.Component.extend({
   radius: 0,
   updateTrigger: function(){
     //gmaps code to set new cordinates
-    // debugger;
+    // debuggfer;
     var latitude = this.get('latitude');
     var longitude = this.get('longitude');
     this.$('#picker-latitude').val(latitude);
@@ -197,9 +199,10 @@ App.LocationPickerComponent = Ember.Component.extend({
         _this.set('latitude', currentLocation.latitude);
         _this.set('longitude', currentLocation.longitude);
         _this.set('radius', radius);
-        // console.log("Location changed. New location (" + currentLocation.latitude + ", " + currentLocation.longitude + ")");
+        console.log("Location changed. New location (" + currentLocation.latitude + ", " + currentLocation.longitude + ")");
       }
     }
+
     //initialise location picker
     container.locationpicker(options);
   }.on('didInsertElement')
@@ -251,9 +254,8 @@ App.GoogleMapsComponent = Ember.Component.extend({
 
   coordinatesChanged: function() {
     var map = this.get('map');
-
     if (map)
-      map.setCenter(this.get('latitude'), this.get('longitude'));
+      map.setCenter(this.get('longitude'), this.get('latitude'));
   }.observes('latitude', 'longitude'),
 
   setMarkers: function() {
@@ -271,7 +273,7 @@ App.GoogleMapsComponent = Ember.Component.extend({
         //   position: new google.maps.LatLng(marker.get('latitude'), marker.get('longitude')),
         //   map: map
         // });
-        debugger
+        // debugger
       map.addMarker({
         lat: parseInt(+JSON.parse(JSON.stringify(marker.get('latitude')))),
         lng: parseInt(+JSON.parse(JSON.stringify(marker.get('longitude')))),
@@ -287,16 +289,14 @@ App.GoogleMapsComponent = Ember.Component.extend({
   }.observes('markers.@each.latitude', 'markers.@each.longitude', "markers")
 });
 
-
-
 App.NewpostRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
   model: function(params){
     return this.store.find('issue', params.issueID);
   }
 });
 App.NewpostController = Ember.Controller.extend({
-  postTitle: "Enter title here",
-  postContent: "Enter content here",
+  postTitle: "Your title",
+  postContent: "Description",
   radius: "100",
   latitude: "-27.4865767", //default coordinates to Brisbane
   longitude: "153.0278",
@@ -306,7 +306,6 @@ App.NewpostController = Ember.Controller.extend({
     navigator.geolocation.getCurrentPosition(function(position) {
       coords = position.coords
       console.log(coords);
-      debugger;
       _this.set('latitude', coords.latitude);
       _this.set('longitude', coords.longitude);
     });
