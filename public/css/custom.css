@@ -183,10 +183,21 @@ canvas {-ms-touch-action: double-tap-zoom;}
 }
 
 #loading {
-  background: red;
+  /*background: red;*/
   height: 50%;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+#loading > img {
+  height:100%;
+  position: relative;
+}
+
+#loading > h3 {
+  text-align: center;
+  font-weight: 300;
+  margin-top: -20%;
 }

@@ -76,8 +76,8 @@ App.IndexController = Ember.Controller.extend({
   markers: [
     //code for an array of issue coordinates
     Ember.Object.create({ latitude: -33.86781, longitude: 151.20754 }), // Sydnet
-    Ember.Object.create({ latitude: -28, longitude: 153 }), 
-    Ember.Object.create({ latitude: -27, longitude: 153 }) // Sydnet
+    Ember.Object.create({ latitude: -27.4679, longitude: 153.0278}), 
+    Ember.Object.create({ latitude: -27.4984, longitude: 152.9712}) // Sydnet
   ]
 });
 
@@ -230,33 +230,33 @@ App.GoogleMapsComponent = Ember.Component.extend({
     var id = guid()
     var container = this.$('.map-canvas').attr('id', id);
 
-    // var options = {
-    //   center: new google.maps.LatLng(
-    //       this.get('latitude'),
-    //       this.get('longitude')
-    //     ),
-    //     zoom: 12,
-    //     mapTypeId: google.maps.MapTypeId.ROADMAP
-    // };
+    var options = {
+      center: new google.maps.LatLng(
+          this.get('latitude'),
+          this.get('longitude')
+        ),
+        zoom: 12,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
 
-    // this.set('map', new google.maps.Map(container[0], options));
+    this.set('map', new google.maps.Map(container[0], options));
     this.set('markerCache', []);
 
-    var map = new GMaps({
-      div: "#" + id,
-      lat: this.get('latitude'),
-      lng: this.get('longitude')
-    });
+    // var map = new GMaps({
+    //   div: "#" + id,
+    //   lat: this.get('latitude'),
+    //   lng: this.get('longitude')
+    // });
 
-    this.set('map', map);
+    // this.set('map', map);
     this.setMarkers();
   }.on('didInsertElement'),
 
-  coordinatesChanged: function() {
-    var map = this.get('map');
-    if (map)
-      map.setCenter(this.get('longitude'), this.get('latitude'));
-  }.observes('latitude', 'longitude'),
+  // coordinatesChanged: function() {
+  //   var map = this.get('map');
+  //   if (map)
+  //     map.setCenter(this.get('longitude'), this.get('latitude'));
+  // }.observes('latitude', 'longitude'),
 
   setMarkers: function() {
     var map = this.get('map'),
@@ -269,19 +269,19 @@ App.GoogleMapsComponent = Ember.Component.extend({
 
       // debugger;
       markers.forEach(function(marker){
-        // var gMapsMarker = new google.maps.Marker({
-        //   position: new google.maps.LatLng(marker.get('latitude'), marker.get('longitude')),
-        //   map: map
-        // });
+        var gMapsMarker = new google.maps.Marker({
+          position: new google.maps.LatLng(marker.get('latitude'), marker.get('longitude')),
+          map: map
+        });
         // debugger
-      map.addMarker({
-        lat: parseInt(+JSON.parse(JSON.stringify(marker.get('latitude')))),
-        lng: parseInt(+JSON.parse(JSON.stringify(marker.get('longitude')))),
-        title: 'Lima',
-        click: function(e) {
-          alert('You clicked in this marker');
-        }
-      });
+      // map.addMarker({
+      //   lat: marker.get('latitude'),
+      //   lng: marker.get('longitude'),
+      //   title: 'Lima',
+      //   click: function(e) {
+      //     alert('You clicked in this marker');
+      //   }
+      // });
 
         // markerCache.pushObject(gMapsMarker); // Add this marker to our cache
       }, this);
@@ -370,5 +370,21 @@ App.NewpostController = Ember.Controller.extend({
 //   unixDate = this.get('model.')
 //   return moment().format(format);
 // });
+
+// make sure this is ember handlebars
+Ember.Handlebars.helper("formatDate", function(datetime, format) {
+  var DateFormats = {
+       short: "DD MMMM - YYYY",
+       long: "dddd DD.MM.YYYY HH:mm"
+  };
+    if (moment) {
+      f = DateFormats[format];
+      // some date strings are in ms
+      return moment(datetime*1000).format(f);
+    }
+    else {
+      return datetime;
+    }
+});
 
 });

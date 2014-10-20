@@ -203,7 +203,7 @@
 <script type="text/x-handlebars" data-template-name="loading">
   <div id="loading">
     <img src="images/loading.gif"/>
-    <p>Loading...</p>
+    <h3>Loading...</h3>
   </div>
 </script>
 
@@ -211,16 +211,18 @@
  <div class='container-fluid fullscreen'>
     <div class='row fullscreen'>
       <div class='col-md-8 fullscreen'>
-        <h1>{{issue.title}}</h1>
-        <span class="glyphicon glyphicon-time"></span>
-        {{issue.created}}, first spotted
-        <br/>
-        <span class="glyphicon glyphicon-pencil"></span>
-        {{issue.created}}, last updated
-        <br/><br/>
-        {{#if issue.content}}
-          {{issue.content}}
-        {{/if}}        
+        {{#with issue}}
+          <h1>{{title}}</h1>
+          <span class="glyphicon glyphicon-time"></span>
+          {{formatDate created "long"}}, first spotted
+          <br/>
+          <span class="glyphicon glyphicon-pencil"></span>
+          {{formatDate updated "long"}}, last updated
+          <br/><br/>
+          {{#if content}}
+            {{content}}
+          {{/if}}        
+        {{/with}}
         <br/> <br/>
         <!--map div-->
         {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
@@ -229,13 +231,19 @@
       <!--posts -->
       <div class='col-md-4' id="content" class="fullscreen">
         <div id="subcontent">
+          <div class="well newitem">
+              {{#link-to 'newpost' issue.id}}
+                <span class="glyphicon glyphicon-plus"></span>
+                Add new post to issue
+              {{/link-to}}
+          </div>
          {{#each post in issue.posts}}
             <div class='well'>
               <h2>
                 {{post.title}}
               </h2>
               <span class="glyphicon glyphicon-time"></span>
-              {{post.created}}
+              {{formatDate post.created "long"}}
               <br/>
               <span class="glyphicon glyphicon-globe"></span>
               {{post.latitude}}, {{post.longitude}}
@@ -254,14 +262,6 @@
               </p>
             </div>
           {{/each}}
-
-
-          <div class="well newitem">
-              {{#link-to 'newpost' issue.id}}
-                <span class="glyphicon glyphicon-plus"></span>
-                Add new posts to issue
-              {{/link-to}}
-          </div>
       </div>
     </div>
   </div>
