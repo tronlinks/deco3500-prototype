@@ -4,6 +4,7 @@
     <title>Grapevine Beta</title>
     <meta charset='utf-8' />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/png" href="/images/logo.png" />
 
     <!-- Styles -->
     <link rel="stylesheet" href="/css/bootstrap.min.css"/>
@@ -23,9 +24,7 @@
 
     <!-- Maps stuff -->
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqoUGXPM_78IoXgBMEVwjzXq8jG3nxx64"> </script>
-    <!--
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
-    -->
     <script src="/js/lib/gmaps.js"></script>
     <script src="/js/lib/locationpicker.jquery.js"></script>
     <script src="/js/lib/jquery.geocomplete.min.js"></script>
@@ -110,15 +109,32 @@
 
 <script type="text/x-handlebars" data-template-name="newissue">
   <div class="wrapper">
-    <form class="form-signin" id="newpost">
+    <form class="form-signin" id="form-newpost">
       <h2 class="form-signin-heading">
         New Issue
       </h2>
       {{eui-input valueBinding='issueTitle'}}
       <br/><br/>
-      {{eui-textarea width='80%' valueBinding='issueContent' placeholder='Enter brief description here'}}
+      {{eui-textarea width='80%' valueBinding='issueContent'}}
 		  <br/><br/>
-		{{eui-button label='Create Issue' action='createIssue'}}
+      {{location-picker latitude=latitude longitude=longitude radius=radius}}<br />
+		  {{eui-button label='Create Issue' action='createIssue'}}
+    </form>
+  </div>
+</script>
+
+<script type="text/x-handlebars" data-template-name="editissue">
+  <div class="wrapper">
+    <form class="form-signin" id="form-newpost">
+      <h2 class="form-signin-heading">
+        Edit Issue
+      </h2>
+      {{eui-input valueBinding='title'}}
+      <br/><br/>
+      {{eui-textarea width='80%' valueBinding='content'}}
+      <br/><br/>
+      {{location-picker latitude=latitude longitude=longitude radius=radius}}<br />
+      {{eui-button label='Save Issue' action='editIssue'}}
     </form>
   </div>
 </script>
@@ -127,18 +143,14 @@
   <div class="wrapper center">
     <form class="form-signin" id='form-newpost'>
       <h2 class="form-signin-heading">
-        New Post 
+        New Post
       </h2>
       {{eui-input valueBinding='postTitle' placeholder='Enter title here'}}<br /><br />
-  	  {{eui-textarea width='80%' valueBinding='postContent' placeholder='Enter content here'}}<br /><br />
+      {{eui-textarea width='80%' valueBinding='postContent'}}
   	  {{location-picker latitude=latitude longitude=longitude radius=radius}}<br />
   	  {{eui-button label='Create Post' action='createPost'}}
     </form>
   </div>
-{{!--   {{eui-input valueBinding='postTitle'}}
-  {{eui-input valueBinding='postContent'}}
-  {{location-picker latitude=latitude longitude=longitude radius=radius}}
-  {{eui-button label='Create Post' action='createPost'}} --}}
 </script>
 
 <script type="text/x-handlebars" data-template-name="index">
@@ -151,40 +163,44 @@
       <div class='col-md-4' id="content" class="fullscreen">
         <div id="subcontent" >
           {{#each issue in model}}
-            {{#link-to 'issue' issue.id}}
-            <div class='well issue'>
-              <h2>
-                {{issue.title}}
-              </h2>
-              <span class="glyphicon glyphicon-time"></span>
-              {{issue.created}}, first spotted
-              <br/>
-              <span class="glyphicon glyphicon-pencil"></span>
-              {{issue.created}}, last updated
-              <br/>
-              {{!--
-              <a href="index.html">
-                <span class="glyphicon glyphicon-globe"></span>
-
-              </a>
-              <br/>
-               --}}
-              <span class="glyphicon glyphicon-send"></span>
-              {{#if issue.posts}}
-                {{issue.posts.length}} Posts
-              {{else}}
-                0 Posts
-              {{/if}}
-              <br/>
-              <br/>
-              <p>
-                {{#if issue.content}}
-                  {{issue.content}}
-                {{else}}
-                  No content yet.
-                {{/if}}
-              </p>
-            </div>
+            <div class='well relative highlight'>
+              <!--edit button-->
+              {{#link-to 'editissue' issue.id}} 
+                <button class="btn btn-default editButton" type="submit">
+                  <span class="glyphicon glyphicon-pencil "></span>
+                </button>
+              {{/link-to}}
+              
+              {{#link-to 'issue' issue.id}}
+                <h2>
+                  {{issue.title}}
+                </h2>
+                <div class='meta'>
+                  <span class="glyphicon glyphicon-time"></span>
+                  Spotted: {{formatDate issue.created "long"}}  
+                  <br/>
+                  <span class="glyphicon glyphicon-pencil"></span>
+                  Updated: {{formatDate issue.updated "long"}}
+                  <br/>
+                  <span class="glyphicon glyphicon-globe"></span>
+                  {{issue.latitude}}, {{issue.longitude}}
+                  <br/>
+                  <span class="glyphicon glyphicon-send"></span>
+                  {{#if issue.posts}}
+                    {{issue.posts.length}} Posts
+                  {{else}}
+                    0 Posts
+                  {{/if}}
+                </div>
+                <br/>
+                <p>
+                  {{#if issue.content}}
+                    {{issue.content}}
+                  {{else}}
+                    No content yet.
+                  {{/if}}
+                </p>
+              </div>
             {{/link-to}}
           {{/each}}
         </div>
@@ -211,57 +227,66 @@
  <div class='container-fluid fullscreen'>
     <div class='row fullscreen'>
       <div class='col-md-8 fullscreen'>
-        {{#with issue}}
-          <h1>{{title}}</h1>
-          <span class="glyphicon glyphicon-time"></span>
-          {{formatDate created "long"}}, first spotted
-          <br/>
-          <span class="glyphicon glyphicon-pencil"></span>
-          {{formatDate updated "long"}}, last updated
-          <br/><br/>
-          {{#if content}}
-            {{content}}
-          {{/if}}        
-        {{/with}}
-        <br/> <br/>
+        <div class='height20'>
+          {{#with issue}}
+            <h1>{{title}}</h1>
+            <div class='meta' style='margin-bottom:1%;'>
+              <span class="glyphicon glyphicon-time"></span>
+              Spotted: {{formatDate created "long"}}
+              <br/>
+              <span class="glyphicon glyphicon-pencil"></span>
+              Updated: {{formatDate updated "long"}}
+            </div>
+            {{#if content}}
+              <p>{{content}}</p>
+            {{/if}}        
+          {{/with}}
+        </div>
         <!--map div-->
-        {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
+        <div class='height80'>
+          {{google-maps latitude=selectedLocation.latitude longitude=selectedLocation.longitude markers=markers}}
+        </div>
       </div>
 
       <!--posts -->
       <div class='col-md-4' id="content" class="fullscreen">
-        <div id="subcontent">
+        <div id="subcontent" style='height:100%'>
           <div class="well newitem">
               {{#link-to 'newpost' issue.id}}
                 <span class="glyphicon glyphicon-plus"></span>
                 Add new post to issue
               {{/link-to}}
           </div>
-         {{#each post in issue.posts}}
-            <div class='well'>
-              <h2>
-                {{post.title}}
-              </h2>
-              <span class="glyphicon glyphicon-time"></span>
-              {{formatDate post.created "long"}}
-              <br/>
-              <span class="glyphicon glyphicon-globe"></span>
-              {{post.latitude}}, {{post.longitude}}
-              <br/>
+         {{#if issue.posts}}
+           {{#each post in issue.posts}}
+              <div class='well'>
+                <h2>
+                  {{post.title}}
+                </h2>
+                <div class='meta'>
+                  <span class="glyphicon glyphicon-time"></span>
+                  {{formatDate post.created "long"}}
+                  <br/>
+                  <span class="glyphicon glyphicon-globe"></span>
+                  {{post.latitude}}, {{post.longitude}}
+                  <br/>
 
-              <span class="glyphicon glyphicon-user"></span>
-              {{#if post.user}}
-                {{post.user.email}}
-              {{else}}
-                Anonymous
-              {{/if}}
-              <br/>
-              <br/>
-              <p>
-                {{post.content}}
-              </p>
-            </div>
-          {{/each}}
+                  <span class="glyphicon glyphicon-user"></span>
+                  {{#if post.user}}
+                    {{post.user.email}}
+                  {{else}}
+                    Anonymous
+                  {{/if}}
+                </div>
+                <br/>
+                <p>
+                  {{post.content}}
+                </p>
+              </div>
+            {{/each}}
+          {{else}}
+            <p class='meta center'>No posts yet...</p>
+          {{/if}}
       </div>
     </div>
   </div>
@@ -271,9 +296,9 @@
   <div class="wrapper">
     <form class="form-signin" {{action login on='submit'}}>
       <h2 class="form-signin-heading">Please login</h2>
-	          <label for="username">Username</label>
-        {{input id='username' placeholder='Enter Username' class='form-control' value=username}}
-		        <label for="password">Password</label>        <label for="password">Password</label>
+        <label for="username">Username</label>
+        {{input id='username' placeholder='Enter Username' class='form-control' value=username}} <br/>
+        <label for="password">Password</label>        <label for="password">Password</label>
         {{input id='password' placeholder='Enter Password' class='form-control' type='password' value=password}}
 		<br />
       <button class="btn btn-lg btn-primary btn-block" type="submit">Login</button>
@@ -306,15 +331,29 @@
 </script>
 
 <script type="text/x-handlebars" id="components/google-maps">
-  <div class="map-canvas"></div>
+  <div class="map-canvas height100"></div>
 </script>
 
 <script type="text/x-handlebars" id="components/location-picker">
-  Location: <input type="text" id="picker-address" class='form-control'/> <br/>
+  <br>
+  Location<input type="text" id="picker-address" class='form-control'/> <br/>
+  {{!-- Radius<input type="text" id="picker-radius" class='form-control'/> <br/> --}}
   <div id="location-picker"></div> <br/>
-  Radius: <input type="text" id="picker-radius" class='form-control'/> <br/>
-  Latitude: <input type="text" id="picker-latitude" class='form-control' disabled/> <br/>
-  Longitude: <input type="text" id="picker-longitude" class='form-control' disabled/>
+  <div >
+    <div class='float50' style='margin-right: 4%;'>
+      <div class="input-group center">
+        <span class="input-group-addon">Lat</span>
+        <input type="text" id="picker-latitude" class='form-control'/> <br/>
+      </div>
+    </div>
+    <div class='float50'>
+      <div class="input-group center">
+        <span class="input-group-addon">Lng</span> 
+        <input type="text" id="picker-longitude" class='form-control'/>
+      </div>
+    </div>
+    <br style="clear:both" /> 
+  </div>
 </script>
 
 

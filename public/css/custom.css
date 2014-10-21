@@ -1,16 +1,18 @@
-a { color: #4B58A6; }
-a:hover { color: #4B58A6; }
+a { 
+  color: rgb(51, 51, 51) 
+  /*color: #4B58A6;*/
+}
+a:hover { 
+  text-decoration: none; 
+  color: rgb(51, 51, 51) 
+}
 
 html, body {
   height:100%;
 }
 
-.fullscreen {
-  height: 85vh;
-}
-
-.center {
-  margin: 0 auto;
+h1, h2, h3, h4 {
+  margin: 0px;
 }
 
 .wrapper {	
@@ -18,8 +20,9 @@ html, body {
   margin-bottom: 80px;
 }
 
-.map-canvas {
-  height: 100%;
+.highlight:hover {
+  background-color: #dedede;
+  text-decoration: underline;
 }
 
 #location-picker {
@@ -45,19 +48,18 @@ html, body {
   height: 100%;
   position:relative;
   background: #fafafa;
+
+  padding:0.5%;
 }
 
 #subcontent {
   height:90%;
-  padding-top: 3%;
   overflow: scroll;
 }
 
-/*#newitem {
-  /*to fix at bottom
-  position:absolute;
-  bottom:0;
-}*/
+#newitem {
+  color:; 
+}
 
 #mc {
   margin:auto;
@@ -74,6 +76,7 @@ html, body {
 
 #form-newpost {
   max-width: 600px;
+  text-align: center;
 }
 
 
@@ -200,4 +203,49 @@ canvas {-ms-touch-action: double-tap-zoom;}
   text-align: center;
   font-weight: 300;
   margin-top: -20%;
+}
+
+.editButton {
+  position: absolute;
+  top: 5%;
+  right: 2%;
+}
+
+/*********************************************/
+/****************   HELPERS   ****************/
+/*********************************************/
+.fullscreen {
+  height: 90vh;
+}
+
+.center {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.height20 {
+  height: 20%;
+}
+
+.height80 {
+  height: 80%;
+}
+
+.height100 {
+  height: 100%;
+}
+
+.float50 {
+  float:left;
+  width:48%;
+}
+
+.relative {
+  position:relative;
+}
+
+.meta {
+  color: #666 ;
+  font-weight: 300;
+  font-size: 9pt;
 }

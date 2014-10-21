@@ -44,6 +44,9 @@ App.Issue = DS.Model.extend({
   updated: DS.attr(''),
   uid: DS.attr(''),
   user: DS.attr(''),
+  longitude: DS.attr(''),
+  latitude: DS.attr(''),
+  radius: DS.attr(''),
   posts: DS.hasMany('post', { async: true }) // misspelled on purpose!!!!! HACK TO-DO
 });
 
@@ -54,6 +57,7 @@ App.Router.map(function() {
   this.route('signup');
 
   this.route('issue', {path: "issue/:issueID"})
+  this.route('editissue', {path: "editissue/:issueID"})
   this.route('newpost', {path: "issue/newpost/:issueID"});
   this.route('newissue');
 });
@@ -69,15 +73,25 @@ App.IndexRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
   }
 });
 App.IndexController = Ember.Controller.extend({
+  sortProperties: ['posts.length'],
+  sortAscending: false,
   selectedLocation: {
-    latitude: "-27.4679",
-    longitude: "153.0278",
+    latitude: "-27.4995",
+    longitude: "153.0151854",
   },
   markers: [
-    //code for an array of issue coordinates
-    Ember.Object.create({ latitude: -33.86781, longitude: 151.20754 }), // Sydnet
-    Ember.Object.create({ latitude: -27.4679, longitude: 153.0278}), 
-    Ember.Object.create({ latitude: -27.4984, longitude: 152.9712}) // Sydnet
+    //code for an array of issue coordinates 
+    Ember.Object.create({ latitude: -27.4984, longitude: 151}),
+    Ember.Object.create({ latitude: -27.4986, longitude: 153.0155}),
+    Ember.Object.create({ latitude: -27.5400, longitude: 151.0680}),
+    Ember.Object.create({ latitude: -27.4679, longitude: 153.0278}),
+    Ember.Object.create({ latitude: -27.6382, longitude: 153.0478}),
+    Ember.Object.create({ latitude: -27.4806, longitude: 152.9541}),
+    Ember.Object.create({ latitude: -27.4600, longitude: 153.0260}),
+    Ember.Object.create({ latitude: -27.4760, longitude: 153.0240}),
+    Ember.Object.create({ latitude: -27.4630, longitude: 153.0220}),
+    Ember.Object.create({ latitude: -27.4994, longitude: 153.0151854}),
+     // Sydnet
   ]
 });
 
@@ -89,10 +103,7 @@ App.IssueRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
       });
   },
   afterModel: function(m){
-
-
-
-
+    debugger;
     return m.issue.get('posts').then(function(a){
       // Loop through promisessssss results
     //    a.forEach(function(post){
@@ -126,14 +137,46 @@ App.IssueRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
 });
 App.IssueController = Ember.ObjectController.extend({
   selectedLocation: {
-    latitude: "-27.4679",
-    longitude: "153.0278",
+    latitude: "-27.4995",
+    longitude: "153.0151854",
+  }
+});
+
+App.EditissueRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
+  model: function(params) {
+    // debugger;
+    return this.store.find('issue', params.issueID);
+  }
+})
+
+App.EditissueController = Ember.Controller.extend({
+actions: {
+    editIssue: function() {
+      console.log('clicked editIssue')
+      // this.get('model').save()
+      // this.transitionTo('index');
+    }
   }
 });
 
 App.NewissueController = Ember.Controller.extend({
+    //data from UI to Model
     issueTitle: "Issue title",
     issueContent: "Issue brief description",
+    latitude: "-27.4995",
+    longitude: "153.0151854",
+    radius: "100",
+    latitudeSetter: function() {
+        var _this = this;
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+          coords = position.coords
+          _this.set('latitude', coords.latitude);
+          _this.set('longitude', coords.longitude);
+          console.log("Geolocated (" + coords.latitude + ", " + coords.longitude + ")");
+          // debugger;
+        });
+      }.on('init'),
     actions: {
       createIssue: function(){
         var _this = this;
@@ -145,7 +188,10 @@ App.NewissueController = Ember.Controller.extend({
           created: moment().unix(),
           updated: moment().unix(),
           uid: _this.get('user').current.user_id,
-          user: _this.get('user').current
+          user: _this.get('user').current,
+          latitude: _this.get('latitude'),
+          longitude: _this.get('longitude'),
+          radius: _this.get('radius')
         });
 
         // Save to firebase
@@ -171,7 +217,7 @@ App.LocationPickerComponent = Ember.Component.extend({
   radius: 0,
   updateTrigger: function(){
     //gmaps code to set new cordinates
-    // debuggfer;
+    // debugger;
     var latitude = this.get('latitude');
     var longitude = this.get('longitude');
     this.$('#picker-latitude').val(latitude);
@@ -209,7 +255,7 @@ App.LocationPickerComponent = Ember.Component.extend({
 });
 
 App.GoogleMapsComponent = Ember.Component.extend({
-  classNames: ['fullscreen'],
+  classNames: ['height100'],
   longitude: '',
   latitude: '',
   markers: '',
@@ -295,19 +341,20 @@ App.NewpostRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
   }
 });
 App.NewpostController = Ember.Controller.extend({
-  postTitle: "Your title",
-  postContent: "Description",
+  postTitle: "Title",
+  postContent: "Content",
   radius: "100",
-  latitude: "-27.4865767", //default coordinates to Brisbane
-  longitude: "153.0278",
+  latitude: "-27.4995", //default coordinates to Brisbane
+  longitude: "153.0151854",
   latitudeSetter: function() {
     var _this = this;
 
     navigator.geolocation.getCurrentPosition(function(position) {
       coords = position.coords
-      console.log(coords);
       _this.set('latitude', coords.latitude);
       _this.set('longitude', coords.longitude);
+      console.log("Geolocated (" + coords.latitude + ", " + coords.longitude + ")");
+      // debugger;
     });
   }.on('init'),
   actions: {
@@ -365,11 +412,6 @@ App.NewpostController = Ember.Controller.extend({
     }
   }
 });
-
-// Ember.Handlebars.registerBoundHelper('formattedUnixDate', function(format) {
-//   unixDate = this.get('model.')
-//   return moment().format(format);
-// });
 
 // make sure this is ember handlebars
 Ember.Handlebars.helper("formatDate", function(datetime, format) {
