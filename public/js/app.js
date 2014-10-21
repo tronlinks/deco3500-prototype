@@ -87,11 +87,12 @@ App.IndexController = Ember.Controller.extend({
     Ember.Object.create({ latitude: -27.4679, longitude: 153.0278}),
     Ember.Object.create({ latitude: -27.6382, longitude: 153.0478}),
     Ember.Object.create({ latitude: -27.4806, longitude: 152.9541}),
-    Ember.Object.create({ latitude: -27.4600, longitude: 153.0260}),
+    Ember.Object.create({ latitude: -27.5590, longitude: 153.1630}), //burbank
     Ember.Object.create({ latitude: -27.4760, longitude: 153.0240}),
     Ember.Object.create({ latitude: -27.4630, longitude: 153.0220}),
     Ember.Object.create({ latitude: -27.4994, longitude: 153.0151854}),
-     // Sydnet
+    Ember.Object.create({ latitude: -27.5000, longitude: 152.9722}),
+    Ember.Object.create({ latitude: -27.5000, longitude: 153.1000}),
   ]
 });
 
@@ -103,7 +104,6 @@ App.IssueRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
       });
   },
   afterModel: function(m){
-    debugger;
     return m.issue.get('posts').then(function(a){
       // Loop through promisessssss results
     //    a.forEach(function(post){
@@ -136,9 +136,33 @@ App.IssueRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
   }
 });
 App.IssueController = Ember.ObjectController.extend({
+  sortProperties: ['likes'],
+  sortAscending: ['true'],
   selectedLocation: {
     latitude: "-27.4995",
     longitude: "153.0151854",
+  },
+  actions: {
+    like: function(id){
+      
+      this.store.find('post', id).then(function(post) {
+        // debugger;
+        currentLikes = post.get('likes')
+        post.set('likes', currentLikes+1)
+
+        // save to firebase
+        likePromise = post.save()
+
+        // Check if succesfull :)
+        likePromise.then(function(a){
+          console.log('created issue successful');
+        }, function(a){
+          console.log('created issue unsuccessful');
+          debugger;
+        });
+      });
+
+    }
   }
 });
 
@@ -148,9 +172,8 @@ App.EditissueRoute = Ember.Route.extend(Ember.UserApp.ProtectedRouteMixin, {
     return this.store.find('issue', params.issueID);
   }
 })
-
 App.EditissueController = Ember.Controller.extend({
-actions: {
+  actions: {
     editIssue: function() {
       console.log('clicked editIssue')
       // this.get('model').save()

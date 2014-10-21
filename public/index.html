@@ -192,7 +192,6 @@
                     0 Posts
                   {{/if}}
                 </div>
-                <br/>
                 <p>
                   {{#if issue.content}}
                     {{issue.content}}
@@ -230,7 +229,7 @@
         <div class='height20'>
           {{#with issue}}
             <h1>{{title}}</h1>
-            <div class='meta' style='margin-bottom:1%;'>
+            <div class='meta'>
               <span class="glyphicon glyphicon-time"></span>
               Spotted: {{formatDate created "long"}}
               <br/>
@@ -252,14 +251,19 @@
       <div class='col-md-4' id="content" class="fullscreen">
         <div id="subcontent" style='height:100%'>
           <div class="well newitem">
-              {{#link-to 'newpost' issue.id}}
-                <span class="glyphicon glyphicon-plus"></span>
-                Add new post to issue
-              {{/link-to}}
+            <!--new post -->
+            {{#link-to 'newpost' issue.id}}
+              <span class="glyphicon glyphicon-plus"></span>
+              Add new post to issue
+            {{/link-to}}
           </div>
          {{#if issue.posts}}
            {{#each post in issue.posts}}
-              <div class='well'>
+              <div class='well relative'>
+                <!--like button-->
+                <button {{action 'like' post.id}} class="btn btn-default likeButton" type="submit">
+                  <span class="glyphicon glyphicon-thumbs-up"></span>
+                </button>
                 <h2>
                   {{post.title}}
                 </h2>
@@ -270,15 +274,16 @@
                   <span class="glyphicon glyphicon-globe"></span>
                   {{post.latitude}}, {{post.longitude}}
                   <br/>
-
                   <span class="glyphicon glyphicon-user"></span>
                   {{#if post.user}}
                     {{post.user.email}}
                   {{else}}
                     Anonymous
                   {{/if}}
+                  <br/>
+                  <span class="glyphicon glyphicon-thumbs-up"></span>
+                  {{post.likes}} likes
                 </div>
-                <br/>
                 <p>
                   {{post.content}}
                 </p>

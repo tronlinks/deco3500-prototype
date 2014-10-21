@@ -205,7 +205,7 @@ canvas {-ms-touch-action: double-tap-zoom;}
   margin-top: -20%;
 }
 
-.editButton {
+.editButton, .likeButton {
   position: absolute;
   top: 5%;
   right: 2%;
@@ -248,4 +248,5 @@ canvas {-ms-touch-action: double-tap-zoom;}
   color: #666 ;
   font-weight: 300;
   font-size: 9pt;
+  margin-bottom: 1%
 }
